@@ -22,7 +22,6 @@ import ui
 
 from splash_scene import *
 
-
 #  ..use when deploying app for Xcode and the App Store
 main_view = ui.View()
 scene_view = SceneView(frame = main_view.bounds, flex = 'WH')
