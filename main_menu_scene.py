@@ -7,7 +7,7 @@
 
 from scene import *
 import ui
-from help_scene import *
+from instructions_scene import *
 
 class MainMenuScene(Scene):
     def setup(self):
@@ -120,7 +120,7 @@ class MainMenuScene(Scene):
         
         # switch scenes when buttons pressed
         if self.help_button.frame.contains_point(touch.location):
-            self.present_modal_scene(HelpScene())
+            self.present_modal_scene(InstructionsScene())
         
         if self.high_scores_button.frame.contains_point(touch.location):
             pass

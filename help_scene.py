@@ -8,19 +8,21 @@
 
 from scene import *
 import ui
-from instructions_scene import *
+
 
 class HelpScene(Scene):
     def setup(self):
         # this method is called, when user moves to this scene
         
-        #These variable are created in order to avoid pointers
+        #These variables are created in order to avoid pointers
         self.size_of_screen_x = self.size.x
         self.size_of_screen_y = self.size.y
         self.center_of_screen_x = self.size_of_screen_x/2
         self.center_of_screen_y = self.size_of_screen_y/2
         
         self.scale_of_sprites = 1
+        self.item_move_speed = 3
+        self.transition_info_to_help = False
         
         # add background color
         help_background_position = Vector2(self.center_of_screen_x, self.center_of_screen_y)
@@ -124,39 +126,42 @@ class HelpScene(Scene):
                                       position = game7_image_position,
                                       scale = self.game7_image_scale)
         
-        
+        # List of items for animating purposes
+        self.scene_items = [self.menu_button, self.menu_symbol, self.credits_box, self.credits_title, self.credits, self.image_explanation, self.game1_image, self.game2_image, self.game3_image, self.game4_image, self.game5_image, self.game6_image, self.game7_image]
     
     def update(self):
         # this method is called, hopefully, 60 times a second
-        pass
+        if self.transition_info_to_help == True:
+            self.animate_present_scene()
     
     def touch_began(self, touch):
         # this method is called, when user touches the screen
+        
         if self.menu_button.frame.contains_point(touch.location):
             self.menu_button.scale = self.menu_button.scale * 0.9
             self.menu_symbol.scale = self.menu_symbol.scale * 0.9
         
         if self.game1_image.frame.contains_point(touch.location):
             self.game1_image.scale = self.game1_image.scale * 0.9
-            self.present_modal_scene(InstructionsScene())
+            
         if self.game2_image.frame.contains_point(touch.location):
             self.game2_image.scale = self.game2_image.scale * 0.9
-            self.present_modal_scene(InstructionsScene())
+            
         if self.game3_image.frame.contains_point(touch.location):
             self.game3_image.scale = self.game3_image.scale * 0.9
-            self.present_modal_scene(InstructionsScene())
+            
         if self.game4_image.frame.contains_point(touch.location):
             self.game4_image.scale = self.game4_image.scale * 0.9
-            self.present_modal_scene(InstructionsScene())
+            
         if self.game5_image.frame.contains_point(touch.location):
             self.game5_image.scale = self.game5_image.scale * 0.9
-            self.present_modal_scene(InstructionsScene())
+            
         if self.game6_image.frame.contains_point(touch.location):
             self.game6_image.scale = self.game6_image.scale * 0.9
-            self.present_modal_scene(InstructionsScene())
+            
         if self.game7_image.frame.contains_point(touch.location):
             self.game7_image.scale = self.game7_image.scale * 0.9
-            self.present_modal_scene(InstructionsScene())
+            
         
     
     def touch_moved(self, touch):
@@ -176,6 +181,29 @@ class HelpScene(Scene):
         self.game6_image.scale = self.game6_image_scale
         self.game7_image.scale = self.game7_image_scale
         
+        #Move to instructions scene
+        if self.game1_image.frame.contains_point(touch.location):
+            self.present_modal_scene(InstructionsScene())
+            
+        if self.game2_image.frame.contains_point(touch.location):
+            self.present_modal_scene(InstructionsScene())
+            
+        if self.game3_image.frame.contains_point(touch.location):
+            self.present_modal_scene(InstructionsScene())
+            
+        if self.game4_image.frame.contains_point(touch.location):
+            self.present_modal_scene(InstructionsScene())
+            
+        if self.game5_image.frame.contains_point(touch.location):
+            self.present_modal_scene(InstructionsScene())
+            
+        if self.game6_image.frame.contains_point(touch.location):
+            self.present_modal_scene(InstructionsScene())
+            
+        if self.game7_image.frame.contains_point(touch.location):
+            self.present_modal_scene(InstructionsScene())
+            
+        
         #dismiss scene
         if self.menu_button.frame.contains_point(touch.location):
             self.dismiss_modal_scene()
@@ -194,3 +222,4 @@ class HelpScene(Scene):
         # this method is called, when user place app from background 
         # back into use. Reload anything you might need.
         pass
+    

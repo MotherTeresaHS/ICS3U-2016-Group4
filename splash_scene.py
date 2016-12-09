@@ -31,7 +31,7 @@ class SplashScene(Scene):
         # this method is called, hopefully, 60 times a second
         
         # after 2 seconds, move to main menu scene
-        if not self.presented_scene and time.time() - self.start_time > 2:
+        if not self.presented_scene and time.time() - self.start_time > 0:
             self.present_modal_scene(MainMenuScene())
     
     def touch_began(self, touch):
