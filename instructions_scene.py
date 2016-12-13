@@ -5,6 +5,7 @@
 # Edited by: Matthew Lourenco
 # 8 Dec 2016: created scene, added back button
 # 9 Dec 2016: created placeholder image, text area and placeholder text, merged this scene with the help scene and animated the transition
+# 13 Dec 2016: Created descriptions for each game, made descriptions and pictures change based on the button pressed
 
 from scene import *
 import ui
@@ -20,10 +21,16 @@ class InstructionsScene(Scene):
         self.center_of_screen_y = self.size_of_screen_y/2
         
         self.scale_of_sprites = 1
-        self.item_move_speed = 3
+        self.item_move_speed = 2.5
         
         # Game descriptions
         self.game1_description = 'This is game 1:\nIn this game an asteriod\nwill randomly appear and\nmove towards a power\ncore. Tap the asteriod\nto destroy it! If\nthe asteroid touches the\npower core you lose!'
+        self.game2_description = "This is game 2:\nThere is a button in\nthe center of this game.\nWhen it turns green you\nmust press it within five\nseconds or you lose. If\nyou press it while it\nis red you will also lose."
+        self.game3_description = "This is game 3:\nIn this game, shapes will\nappear on the left and\nyou must sort them by\npressing the matching button on\nthe right. If you press\nthe wrong button or take\nlonger than five seconds to\npress the correct one you lose."
+        self.game4_description = "This is game 4:\nIn this game a slider moves\nslowly to the left. Keep it\nas far right as you can!\nIf the slider reaches the\nleft end of the track you lose!"
+        self.game5_description = "This is game 5:\nIn the center of this game\na shape will slowly expand.\nSort it by pressing the\nmatching button on the right\nor left. If you press the\nwrong button, or five seconds\npass you lose!"
+        self.game6_description = "This is game 6:\nIn this game you are\ndriving down the highway.\nTrucks will drive towards you\nfrom the other direction. avoid\nthem by touching the left or\nright button. If you touch\na truck you lose!"
+        self.game7_description = "This is game 7:\nIn this game you are the\ncircle in the middle of\nthe screen. Tilt the screen\nto move the circle. Don't\ntouch the sides of the\nbox or the red triangles\nor you lose!"
         
         # add background color
         help_background_position = Vector2(self.center_of_screen_x, self.center_of_screen_y)
@@ -241,21 +248,27 @@ class InstructionsScene(Scene):
         if self.game2_image.frame.contains_point(touch.location):
             self.animate_help_to_info()
             self.placeholder_image.texture = self.game2_image.texture
+            self.placeholder_text_label.text = self.game2_description
         if self.game3_image.frame.contains_point(touch.location):
             self.animate_help_to_info()
             self.placeholder_image.texture = self.game3_image.texture
+            self.placeholder_text_label.text = self.game3_description
         if self.game4_image.frame.contains_point(touch.location):
             self.animate_help_to_info()
             self.placeholder_image.texture = self.game4_image.texture
+            self.placeholder_text_label.text = self.game4_description
         if self.game5_image.frame.contains_point(touch.location):
             self.animate_help_to_info()
             self.placeholder_image.texture = self.game5_image.texture
+            self.placeholder_text_label.text = self.game5_description
         if self.game6_image.frame.contains_point(touch.location):
             self.animate_help_to_info()
             self.placeholder_image.texture = self.game6_image.texture
+            self.placeholder_text_label.text = self.game6_description
         if self.game7_image.frame.contains_point(touch.location):
             self.animate_help_to_info()
             self.placeholder_image.texture = self.game7_image.texture
+            self.placeholder_text_label.text = self.game7_description
         
         #move back to help scene
         if self.back_button.frame.contains_point(touch.location):
@@ -285,7 +298,8 @@ class InstructionsScene(Scene):
         for item in self.scene_items:
             item_move_action = Action.move_to(item.position.x,
                                               item.position.y + self.size_of_screen_y,
-                                              self.item_move_speed)
+                                              self.item_move_speed,
+                                              TIMING_SINODIAL)
             item.run_action(item_move_action)
     
     def animate_info_to_help(self):
@@ -293,5 +307,6 @@ class InstructionsScene(Scene):
         for item in self.scene_items:
             item_move_action = Action.move_to(item.position.x,
                                               item.position.y - self.size_of_screen_y,
-                                              self.item_move_speed)
+                                              self.item_move_speed,
+                                              TIMING_SINODIAL)
             item.run_action(item_move_action)
