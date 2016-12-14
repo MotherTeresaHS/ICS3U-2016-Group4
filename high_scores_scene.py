@@ -4,9 +4,11 @@
 # This scene shows the high scores scene.
 # Edited by: Matthew Lourenco
 # Dec 13 2016: created high scores scene, made menu button and made it go back to the main menu scene, set up high scores title
+# Dec 14 2016: created high_scores.txt and made this scene read the file
 
 from scene import *
 import ui
+import json
 
 class HighScoresScene(Scene):
     def setup(self):
@@ -23,7 +25,7 @@ class HighScoresScene(Scene):
         # add background color
         background_position = Vector2(self.center_of_screen_x, self.center_of_screen_y)
         self.background = SpriteNode(position = background_position,
-                                     color = '#b45e00',
+                                     color = '#673600',
                                      parent = self,
                                      size = self.size)
         # add menu button
@@ -51,8 +53,15 @@ class HighScoresScene(Scene):
                                            parent = self,
                                            position = high_scores_title_position,
                                            scale = self.scale_of_sprites)
-        
-        
+        # add high scores text label
+        high_scores_text_position = Vector2(self.center_of_screen_x, self.center_of_screen_y * 0.8)
+        self.high_scores_text = LabelNode(text = 'blank blank blank\nblank blank blank\nblank blank blank\nblank blank blank\nblank blank blank\nblank blank blank\nblank blank blank\nblank blank blank\nblank blank blank\n',
+                                          font = ('futura', 40),
+                                          color = '#b4b4b4',
+                                          parent = self,
+                                          position = high_scores_text_position,
+                                          scale = self.scale_of_sprites)
+        self.read_high_scores()
     
     def update(self):
         # this method is called, hopefully, 60 times a second
@@ -92,3 +101,12 @@ class HighScoresScene(Scene):
         # this method is called, when user place app from background 
         # back into use. Reload anything you might need.
         pass
+    
+    def read_high_scores(self):
+        # this method reads the high scores file to determine previous high scores
+        high_scores_list = open('./high_scores.txt')
+        high_scores_table = json.load(high_scores_list)
+        self.high_scores_text.text = ''
+        for element_high_scores in high_scores_table:
+            self.high_scores_text.text = self.high_scores_text.text + element_high_scores[0] + str(element_high_scores[1]).zfill(7) + '\n'
+        high_scores_list.close()
