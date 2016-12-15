@@ -4,10 +4,15 @@
 # This scene shows the main menu.
 # Edited by: Matthew Lourenco
 # Dec 7 2016: added menu Items, made info button go to help scene
+# Dec 13 2016: made high scores button go to high scores scene
+# Dec 14 2016: made scene read file to determine scale of sprites
 
 from scene import *
 import ui
+import json
 from instructions_scene import *
+from high_scores_scene import *
+from game_scene import *
 
 class MainMenuScene(Scene):
     def setup(self):
@@ -19,13 +24,17 @@ class MainMenuScene(Scene):
         self.center_of_screen_x = self.size_of_screen_x/2
         self.center_of_screen_y = self.size_of_screen_y/2
         
-        self.scale_of_sprites = 1
+        # read file to determine self.scale of sprites
+        shared_variables = open('./shared_variables.txt')
+        screen_size = json.load(shared_variables)
+        self.scale_of_sprites = screen_size[4]
+        shared_variables.close()
         
         # add background color
         background_position = Vector2(self.center_of_screen_x, self.center_of_screen_y)
-        self.background = SpriteNode(position = background_position, 
-                                     color = '#e5e5e5', 
-                                     parent = self, 
+        self.background = SpriteNode(position = background_position,
+                                     color = '#e5e5e5',
+                                     parent = self,
                                      size = self.size)
         # add play button
         play_button_position = Vector2(self.center_of_screen_x, self.size_of_screen_y * 0.4)
@@ -123,10 +132,10 @@ class MainMenuScene(Scene):
             self.present_modal_scene(InstructionsScene())
         
         if self.high_scores_button.frame.contains_point(touch.location):
-            pass
+            self.present_modal_scene(HighScoresScene())
         
         if self.play_button.frame.contains_point(touch.location):
-            pass
+            self.present_modal_scene(GameScene())
         
     
     def did_change_size(self):
