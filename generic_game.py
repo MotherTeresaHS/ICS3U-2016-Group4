@@ -1,7 +1,7 @@
 # Created By: Matthew Lourenco
 # Created on: 14 Dec 2016
 # This is a class that defines a generic game layout
-# Dec 14 2016: 
+# Dec 14 2016: created a generic game background and cover
 
 from __future__ import division
 from scene import *

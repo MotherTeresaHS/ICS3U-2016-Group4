@@ -8,7 +8,13 @@
 from __future__ import division
 from scene import *
 import ui
-from generic_game import *
+from game_one import *
+from game_two import *
+from game_three import *
+from game_four import *
+from game_five import *
+from game_six import *
+from game_seven import *
 
 class GameScene(Scene):
     def setup(self):
@@ -32,14 +38,14 @@ class GameScene(Scene):
                                      color = '#e5e5e5',
                                      parent = self,
                                      size = self.size)
-        # set up layout of 7 games
-        game1 = GenericGame(self, self.size_of_screen_x * (1/6), self.size_of_screen_y * (5/6))
-        
-        
-        
-        
-        
-        
+        # set up 7 games
+        game1 = GameOne(self, self.size_of_screen_x * (1/6), self.size_of_screen_y * (5/6))
+        game2 = GameTwo(self, self.size_of_screen_x * (5/6), self.size_of_screen_y * (5/6))
+        game3 = GameThree(self, self.size_of_screen_x * (1/6), self.center_of_screen_y)
+        game4 = GameFour(self, self.size_of_screen_x * (5/6), self.center_of_screen_y)
+        game5 = GameFive(self, self.size_of_screen_x * (1/6), self.size_of_screen_y * (1/6))
+        game6 = GameSix(self, self.size_of_screen_x * (5/6), self.size_of_screen_y * (1/6))
+        #game7 = GameSeven(self, self.center_of_screen_x, self.center_of_screen_y)
         
         
         
