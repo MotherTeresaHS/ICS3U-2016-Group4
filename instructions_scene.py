@@ -6,9 +6,11 @@
 # 8 Dec 2016: created scene, added back button
 # 9 Dec 2016: created placeholder image, text area and placeholder text, merged this scene with the help scene and animated the transition
 # 13 Dec 2016: Created descriptions for each game, made descriptions and pictures change based on the button pressed
+# 14 Dec 2016: made scene read file to determine scale of sprites
 
 from scene import *
 import ui
+import json
 
 class InstructionsScene(Scene):
     def setup(self):
@@ -20,7 +22,12 @@ class InstructionsScene(Scene):
         self.center_of_screen_x = self.size_of_screen_x/2
         self.center_of_screen_y = self.size_of_screen_y/2
         
-        self.scale_of_sprites = 1
+        # read file to determine self.scale of sprites
+        shared_variables = open('./shared_variables.txt')
+        screen_size = json.load(shared_variables)
+        self.scale_of_sprites = screen_size[4]
+        shared_variables.close()
+        
         self.item_move_speed = 2.5
         
         # Game descriptions

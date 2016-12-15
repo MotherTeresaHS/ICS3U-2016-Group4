@@ -5,6 +5,7 @@
 # Edited by: Matthew Lourenco
 # Dec 13 2016: created high scores scene, made menu button and made it go back to the main menu scene, set up high scores title
 # Dec 14 2016: created high_scores.txt and made this scene read the file
+# Dec 14 2016: made scene read file to determine scale of sprites
 
 from scene import *
 import ui
@@ -20,7 +21,11 @@ class HighScoresScene(Scene):
         self.center_of_screen_x = self.size_of_screen_x/2
         self.center_of_screen_y = self.size_of_screen_y/2
         
-        self.scale_of_sprites = 1
+        # read file to determine self.scale of sprites
+        shared_variables = open('./shared_variables.txt')
+        screen_size = json.load(shared_variables)
+        self.scale_of_sprites = screen_size[4]
+        shared_variables.close()
         
         # add background color
         background_position = Vector2(self.center_of_screen_x, self.center_of_screen_y)
