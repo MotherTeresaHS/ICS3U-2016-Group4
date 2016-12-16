@@ -35,6 +35,12 @@ class GameScene(Scene):
         self.scale_of_sprites = screen_size[4]
         shared_variables.close()
         
+        #temp properties to fix errors
+        self.menu_button = LabelNode(text = '', color = 'clear', position = (-100, -100), z_position = 0, parent = self)
+        self.menu_button_scale = 0
+        self.menu_text = LabelNode(text = '', color = 'clear', position = (-100, -100), z_position = 0, parent = self)
+        self.menu_text_scale = 0
+        
         # properties
         self.game_over = False
         self.meteor_on_screen = False
@@ -42,6 +48,8 @@ class GameScene(Scene):
         self.game2_count = 0
         self.game2_pause_counter = False
         self.game2_pause_count = 0
+        self.game3_shape_on_screen = False
+        self.game3_timer_count = 0
         
         # create a timer to keep track of how far the player has progressed
         self.start_time = time.time()
@@ -72,9 +80,12 @@ class GameScene(Scene):
         if time.time() - self.start_time > 3 and not self.game2.get_game_active() and not self.game_over:
             self.game2.activate_game()
         
+        if time.time() - self.start_time > 6 and not self.game3.get_game_active() and not self.game_over:
+            self.game3.activate_game()
+        
         # game 1
         random_game_action_chance = random.randint(0, 1000)
-        if self.game1.get_game_active() and not self.meteor_on_screen and random_game_action_chance < 5:
+        if self.game1.get_game_active() and not self.meteor_on_screen and not self.game_over and random_game_action_chance < 6:
             self.game1.create_meteor(self)
             self.meteor_on_screen = True
         
@@ -83,7 +94,7 @@ class GameScene(Scene):
                 self.end_game()
         
         # game 2
-        if self.game2.get_game_active() and self.game2.get_button_is_red() and not self.game2.get_game_paused() and not self.game_over and random_game_action_chance >= 5 and random_game_action_chance < 8:
+        if self.game2.get_game_active() and self.game2.get_button_is_red() and not self.game2.get_game_paused() and not self.game_over and random_game_action_chance >= 6 and random_game_action_chance < 12:
             self.game2.make_button_green()
             self.game2_count_to_five = True
             self.game2_count = 0
@@ -97,10 +108,30 @@ class GameScene(Scene):
         
         if self.game2_pause_counter:
             self.game2_pause_count = self.game2_pause_count + 1
-            print(self.game2_pause_count)
             if self.game2_pause_count == 60:
                 self.game2_pause_counter = False
                 self.game2.set_game_paused(False)
+        
+        # game 3
+        if self.game3.get_game_active() and not self.game3_shape_on_screen and not self.game_over and random_game_action_chance >= 20 and random_game_action_chance < 24:
+            self.game3.create_shape(self)
+            self.game3_shape_on_screen = True
+            self.game3_timer_count = 0
+        
+        if self.game3.get_game_active() and not self.game_over and self.game3_shape_on_screen:
+            self.game3_timer_count = self.game3_timer_count + 1
+        
+        if not self.game_over and self.game3_timer_count == 30:
+            self.game3.get_timer().text = '4'
+        if not self.game_over and self.game3_timer_count == 60:
+            self.game3.get_timer().text = '3'
+        if not self.game_over and self.game3_timer_count == 90:
+            self.game3.get_timer().text = '2'
+        if not self.game_over and self.game3_timer_count == 120:
+            self.game3.get_timer().text = '1'
+        if not self.game_over and self.game3_timer_count == 150:
+            self.game3.get_timer().text = '0'
+            self.end_game()
         
         
     
@@ -142,7 +173,7 @@ class GameScene(Scene):
         self.game2.get_button().scale = self.scale_of_sprites
         self.game2.get_button_shadow().scale = self.scale_of_sprites
         
-        if not self.game_over and self.game2.get_button().frame.contains_point(touch.location):
+        if not self.game_over and self.game2.get_game_active() and self.game2.get_button().frame.contains_point(touch.location):
             if self.game2.get_button_is_red():
                 self.end_game()
             elif not self.game2.get_button_is_red():
@@ -151,6 +182,37 @@ class GameScene(Scene):
                 self.game2.set_game_paused(True)
                 self.game2_pause_counter = True
                 self.game2_pause_count = 0
+        
+        # game 3
+        if not self.game_over and self.game3.get_game_active() and self.game3.get_button_one().frame.contains_point(touch.location):
+            if self.game3.get_shape_type() == 1:
+                self.game3.get_incoming_shape()[0].remove_from_parent()
+                self.game3.get_incoming_shape().remove(self.game3.get_incoming_shape()[0])
+                self.game3_shape_on_screen = False
+                self.game3_timer_count = 0
+                self.game3.get_timer().text = '5'
+            else:
+                self.end_game()
+        if not self.game_over and self.game3.get_game_active() and self.game3.get_button_two().frame.contains_point(touch.location):
+            if self.game3.get_shape_type() == 2:
+                self.game3.get_incoming_shape()[0].remove_from_parent()
+                self.game3.get_incoming_shape().remove(self.game3.get_incoming_shape()[0])
+                self.game3_shape_on_screen = False
+                self.game3_timer_count = 0
+                self.game3.get_timer().text = '5'
+            else:
+                self.end_game()
+        if not self.game_over and self.game3.get_game_active() and self.game3.get_button_three().frame.contains_point(touch.location):
+            if self.game3.get_shape_type() == 3:
+                self.game3.get_incoming_shape()[0].remove_from_parent()
+                self.game3.get_incoming_shape().remove(self.game3.get_incoming_shape()[0])
+                self.game3_shape_on_screen = False
+                self.game3_timer_count = 0
+                self.game3.get_timer().text = '5'
+            else:
+                self.end_game()
+        
+        
         
     
     def did_change_size(self):

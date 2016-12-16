@@ -52,10 +52,6 @@ class GenericGame():
         #get the game active property
         return self.game_active
     
-    def set_game_active(self, new_boolean):
-        #set the game active property
-        self.game_active = new_boolean
-    
     def get_game_background(self):
         #get the game background property
         return self.game_background

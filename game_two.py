@@ -16,7 +16,7 @@ class GameTwo(GenericGame):
         
         GenericGame.__init__(self, input_parent, game_position_x, game_position_y)
         # edit background
-        GenericGame.get_game_background(self).color = '#989898'
+        GenericGame.get_game_background(self).fill_color = '#989898'
         
         #properties
         self.button_is_red = True
@@ -32,8 +32,7 @@ class GameTwo(GenericGame):
                                 stroke_color = '#aa1c1c',
                                 parent = input_parent,
                                 position = button_position,
-                                z_position = 2,
-                                scale = self.scale_of_sprites)
+                                z_position = 2)
         # add button shadow
         button_shadow_position = Vector2(button_position.x, button_position.y - 10)
         self.button_shadow = ShapeNode(path = button_shape,
@@ -42,8 +41,7 @@ class GameTwo(GenericGame):
                                        parent = input_parent,
                                        position = button_shadow_position,
                                        z_position = 1,
-                                       alpha = 0.75,
-                                       scale = self.scale_of_sprites)
+                                       alpha = 0.75)
         
     
     #getters and setters
