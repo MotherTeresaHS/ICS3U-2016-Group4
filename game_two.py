@@ -42,6 +42,13 @@ class GameTwo(GenericGame):
                                        position = button_shadow_position,
                                        z_position = 1,
                                        alpha = 0.75)
+        # add timer on button
+        self.timer = LabelNode(text = '',
+                               color = '#7efc89',
+                               font = ('futura', 100),
+                               parent = input_parent,
+                               position = button_position,
+                               z_position = 3)
         
     
     #getters and setters
@@ -57,6 +64,10 @@ class GameTwo(GenericGame):
         #get the button shadow property
         return self.button_shadow
     
+    def get_timer(self):
+        #get the timer property
+        return self.timer
+    
     def get_game_paused(self):
         #get the game paused property
         return self.game_paused
@@ -71,6 +82,7 @@ class GameTwo(GenericGame):
         self.button.fill_color = '#28ed39'
         self.button.stroke_color = '#22cb30'
         self.button_is_red = False
+        self.timer.text = '5'
     
     def make_button_red(self):
     	# this method deactivates the button

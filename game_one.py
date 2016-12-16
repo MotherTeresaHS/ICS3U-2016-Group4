@@ -33,7 +33,7 @@ class GameOne(GenericGame):
         #properties
         self.meteor_scale = 1
         self.meteors = []
-        self.meteor_move_speed = 25.0
+        self.meteor_move_speed = 20.0
         
     
     #getters and setters
@@ -51,7 +51,7 @@ class GameOne(GenericGame):
     
     def create_meteor(self, input_meteor_parent):
         # this method creates a meteor
-        meteor_start_position = Vector2(self.size_of_screen_x * (1/6), self.size_of_screen_y + 100)
+        meteor_start_position = Vector2(self.size_of_screen_x * (1/6), self.size_of_screen_y + 60)
         meteor_end_position = Vector2(self.size_of_screen_x * (1/6), self.size_of_screen_y * (2/3))
         self.meteor_scale = self.scale_of_sprites * 0.5
         temp_texture = './assets/sprites/meteor{0}.png'.format(str(random.randint(1,5)))

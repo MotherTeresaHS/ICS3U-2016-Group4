@@ -4,7 +4,7 @@
 # This scene shows the main menu.
 # Edited by: Matthew Lourenco
 # Dec 14 2016: created game scene. made scene read file to determine scale of sprites
-# Dec 15 2016: game 1 functional
+# Dec 15 2016: game 1, 2, and 3 functional
 
 from __future__ import division
 from scene import *
@@ -51,6 +51,8 @@ class GameScene(Scene):
         self.game3_shape_on_screen = False
         self.game3_timer_count = 0
         self.game3_initial_spawn = False
+        self.game4_slider_touched = False
+        self.game4_slider_move_speed = 0.1
         
         # create a timer to keep track of how far the player has progressed
         self.start_time = time.time()
@@ -78,16 +80,21 @@ class GameScene(Scene):
         # this method is called, hopefully, 60 times a second
         
         # keep track of which games are active
-        if time.time() - self.start_time > 15 and not self.game2.get_game_active() and not self.game_over:
+        if time.time() - self.start_time > 1 and not self.game2.get_game_active() and not self.game_over:
             self.game2.activate_game()
             #pass
         
         if time.time() - self.start_time > 30 and not self.game3.get_game_active() and not self.game_over:
             self.game3.activate_game()
+            self.game3.create_shape(self)
+            #pass
+        
+        if time.time() - self.start_time > 45 and not self.game4.get_game_active() and not self.game_over:
+            self.game4.activate_game()
         
         # game 1
-        random_game_action_chance = random.randint(0, 1000)
-        if self.game1.get_game_active() and not self.meteor_on_screen and not self.game_over and random_game_action_chance < 6:
+        random_game_action_chance = random.randint(0, 500)
+        if self.game1.get_game_active() and not self.meteor_on_screen and not self.game_over and random_game_action_chance < 10:
             self.game1.create_meteor(self)
             self.meteor_on_screen = True
         
@@ -96,17 +103,26 @@ class GameScene(Scene):
                 self.end_game()
         
         # game 2
-        if self.game2.get_game_active() and self.game2.get_button_is_red() and not self.game2.get_game_paused() and not self.game_over and random_game_action_chance >= 6 and random_game_action_chance < 12:
+        if self.game2.get_game_active() and self.game2.get_button_is_red() and not self.game2.get_game_paused() and not self.game_over and random_game_action_chance >= 10 and random_game_action_chance < 16:
             self.game2.make_button_green()
             self.game2_count_to_five = True
-            self.game2_count = 0
+            self.game2.get_timer().text = '5'
         
-        if self.game2_count_to_five:
+        if self.game2_count_to_five and not self.game_over:
             self.game2_count = self.game2_count + 1
-            if self.game2_count == 150:
-                self.game2.make_button_red()
-                self.game2_count_to_five = False
-                self.end_game()
+        
+        if self.game2_count == 30 and not self.game_over:
+            self.game2.get_timer().text = '4'
+        if self.game2_count == 60 and not self.game_over:
+            self.game2.get_timer().text = '3'
+        if self.game2_count == 90 and not self.game_over:
+            self.game2.get_timer().text = '2'
+        if self.game2_count == 120 and not self.game_over:
+            self.game2.get_timer().text = '1'
+        if self.game2_count == 150 and not self.game_over:
+            self.game2_count_to_five = False
+            self.game2.get_timer().text = '0'
+            self.end_game()
         
         if self.game2_pause_counter:
             self.game2_pause_count = self.game2_pause_count + 1
@@ -115,13 +131,7 @@ class GameScene(Scene):
                 self.game2.set_game_paused(False)
         
         # game 3
-        if self.game3.get_game_active() and not self.game_over and not self.game3_initial_spawn and random_game_action_chance >= 20 and random_game_action_chance < 24:
-            self.game3.create_shape(self)
-            self.game3_initial_spawn = True
-            self.game3_shape_on_screen = True
-            self.game3_timer_count = 0
-        
-        if self.game3.get_game_active() and not self.game_over and self.game3_shape_on_screen:
+        if self.game3.get_game_active() and not self.game_over:
             self.game3_timer_count = self.game3_timer_count + 1
         
         if not self.game_over and self.game3_timer_count == 30:
@@ -134,6 +144,14 @@ class GameScene(Scene):
             self.game3.get_timer().text = '1'
         if not self.game_over and self.game3_timer_count == 150:
             self.game3.get_timer().text = '0'
+            self.end_game()
+        
+        # game 4
+        if self.game4.get_game_active() and not self.game_over and not self.game4_slider_touched:
+            slider_move_action = Action.move_by(-1, 0, self.game4_slider_move_speed)
+            self.game4.get_slider().run_action(slider_move_action)
+        
+        if not self.game4.get_track().frame.contains_rect(self.game4.get_slider().frame) and self.game4.get_slider().position.x < self.size_of_screen_x * (5/6) and self.game4.get_game_active():
             self.end_game()
         
         
@@ -149,10 +167,19 @@ class GameScene(Scene):
         if self.game2.get_game_active() and not self.game_over and self.game2.get_button().frame.contains_point(touch.location):
             self.game2.get_button().scale = self.game2.get_button().scale * 0.9
             self.game2.get_button_shadow().scale = self.game2.get_button_shadow().scale * 0.9
+        
+        # game 4
+        if self.game4.get_slider().frame.contains_point(touch.location) and not self.game_over:
+            self.game4_slider_touched = True
     
     def touch_moved(self, touch):
         # this method is called, when user moves a finger around on the screen
-        pass
+        
+        # game 4
+        if self.game4.get_track().frame.contains_point(touch.location):
+            self.game4.get_slider().position = Vector2(touch.location.x, self.game4.get_slider_y())
+        
+        
     
     def touch_ended(self, touch):
         # this method is called, when user releases a finger from the screen
@@ -182,6 +209,8 @@ class GameScene(Scene):
             elif not self.game2.get_button_is_red():
                 self.game2.make_button_red()
                 self.game2_count_to_five = False
+                self.game2_count = 0
+                self.game2.get_timer().text = ''
                 self.game2.set_game_paused(True)
                 self.game2_pause_counter = True
                 self.game2_pause_count = 0
@@ -218,6 +247,8 @@ class GameScene(Scene):
                 else:
                     self.end_game()
         
+        # game 4
+        self.game4_slider_touched = False
         
         
     
