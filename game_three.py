@@ -5,6 +5,7 @@
 from __future__ import division
 from scene import *
 import ui
+import math
 from numpy import random
 from generic_game import *
 
@@ -84,13 +85,13 @@ class GameThree(GenericGame):
                                         position = button2_position,
                                         z_position = 3)
         self.button3_symbol_size = button1_symbol_size
-        self.button1_symbol = SpriteNode('./assets/sprites/green_hexagon.png',
+        self.button3_symbol = SpriteNode('./assets/sprites/green_hexagon.png',
                                          color = 'green',
                                          parent = input_parent,
                                          size = self.button3_symbol_size,
                                          position = button3_position,
                                          z_position = 3)
-        
+        self.button3_symbol.run_action(Action.rotate_by(math.pi / 2, 0))
         
     
     #getters and setters
@@ -146,6 +147,7 @@ class GameThree(GenericGame):
                                                   size = self.button3_symbol_size,
                                                   position = shape_start_position,
                                                   z_position = 3))
+            self.incoming_shape[0].run_action(Action.rotate_by(math.pi / 2, 0))
         shape_move_action = Action.move_to(shape_end_position.x,
                                            shape_end_position.y,
                                            self.shape_move_speed)

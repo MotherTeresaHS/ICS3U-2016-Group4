@@ -80,7 +80,7 @@ class GameScene(Scene):
         # this method is called, hopefully, 60 times a second
         
         # keep track of which games are active
-        if time.time() - self.start_time > 1 and not self.game2.get_game_active() and not self.game_over:
+        if time.time() - self.start_time > 15 and not self.game2.get_game_active() and not self.game_over:
             self.game2.activate_game()
             #pass
         
