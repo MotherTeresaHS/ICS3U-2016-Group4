@@ -49,11 +49,6 @@ class GameOne(GenericGame):
         # get the meteor property
         return self.meteor_move_action
     
-    def activate_game(self):
-        # this method activates the game
-        self.__game_active = True
-        GenericGame.get_game_cover(self).alpha = 0
-    
     def create_meteor(self, input_meteor_parent):
         # this method creates a meteor
         meteor_start_position = Vector2(self.size_of_screen_x * (1/6), self.size_of_screen_y + 100)
@@ -63,7 +58,7 @@ class GameOne(GenericGame):
         self.meteors.append(SpriteNode(temp_texture,
                                        parent = input_meteor_parent,
                                        position = meteor_start_position,
-                                       z_position = 5,
+                                       z_position = 3,
                                        scale = self.meteor_scale))
         
         meteor_move_action = Action.move_to(meteor_end_position.x,

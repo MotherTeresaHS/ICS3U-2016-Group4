@@ -3,7 +3,7 @@
 # Created for: ICS3U
 # This scene shows the high scores scene.
 # Edited by: Matthew Lourenco
-# Dec 13 2016: created high scores scene, made menu button and made it go back to the main menu scene, set up high scores title
+# Dec 13 2016: created high scores scene, made back button and made it go back to the main menu scene, set up high scores title
 # Dec 14 2016: created high_scores.txt and made this scene read the file
 # Dec 14 2016: made scene read file to determine scale of sprites
 
@@ -33,23 +33,23 @@ class HighScoresScene(Scene):
                                      color = '#673600',
                                      parent = self,
                                      size = self.size)
-        # add menu button
-        menu_button_position = Vector2(self.size_of_screen_x * 0.1, self.size_of_screen_y * 0.85)
-        menu_button_shape = ui.Path.oval(0, 0, 120, 120)
-        menu_button_shape.line_width = 10 * self.scale_of_sprites
-        self.menu_button_scale = self.scale_of_sprites
-        self.menu_button = ShapeNode(path = menu_button_shape,
+        # add back button
+        back_button_position = Vector2(self.size_of_screen_x * 0.1, self.size_of_screen_y * 0.85)
+        back_button_shape = ui.Path.oval(0, 0, 120, 120)
+        back_button_shape.line_width = 10 * self.scale_of_sprites
+        self.back_button_scale = self.scale_of_sprites
+        self.back_button = ShapeNode(path = back_button_shape,
                                      fill_color = '#e38926',
                                      stroke_color = '#c97922',
                                      parent = self,
-                                     position = menu_button_position,
-                                     scale = self.menu_button_scale)
-        # add menu symbol
-        self.menu_symbol_scale = 1.5 * self.scale_of_sprites 
-        self.menu_symbol = SpriteNode('./assets/sprites/white_arrow_left.png',
+                                     position = back_button_position,
+                                     scale = self.back_button_scale)
+        # add back symbol
+        self.back_symbol_scale = 1.5 * self.scale_of_sprites 
+        self.back_symbol = SpriteNode('./assets/sprites/white_arrow_left.png',
                                       parent = self,
-                                      position = menu_button_position,
-                                      scale = self.menu_symbol_scale)
+                                      position = back_button_position,
+                                      scale = self.back_symbol_scale)
         # add high scores title
         high_scores_title_position = Vector2(self.center_of_screen_x, self. size_of_screen_y * 0.9)
         self.high_scores_title = LabelNode(text = 'High Scores',
@@ -74,9 +74,9 @@ class HighScoresScene(Scene):
     
     def touch_began(self, touch):
         # this method is called, when user touches the screen
-        if self.menu_button.frame.contains_point(touch.location):
-            self.menu_button.scale = self.menu_button.scale * 0.9
-            self.menu_symbol.scale = self.menu_symbol.scale * 0.9
+        if self.back_button.frame.contains_point(touch.location):
+            self.back_button.scale = self.back_button.scale * 0.9
+            self.back_symbol.scale = self.back_symbol.scale * 0.9
     
     def touch_moved(self, touch):
         # this method is called, when user moves a finger around on the screen
@@ -85,11 +85,11 @@ class HighScoresScene(Scene):
     def touch_ended(self, touch):
         # this method is called, when user releases a finger from the screen
         # reset scales
-        self.menu_button.scale = self.menu_button_scale
-        self.menu_symbol.scale = self.menu_symbol_scale
+        self.back_button.scale = self.back_button_scale
+        self.back_symbol.scale = self.back_symbol_scale
         
         # move to main menu scene
-        if self.menu_button.frame.contains_point(touch.location):
+        if self.back_button.frame.contains_point(touch.location):
             self.dismiss_modal_scene()
     
     def did_change_size(self):

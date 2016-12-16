@@ -45,23 +45,23 @@ class InstructionsScene(Scene):
                                      color = '#93acdc', 
                                      parent = self,
                                      size = self.size)
-        # add menu button
-        menu_button_position = Vector2(self.size_of_screen_x * 0.1, self.size_of_screen_y * 0.85)
-        menu_button_shape = ui.Path.oval(0, 0, 120, 120)
-        menu_button_shape.line_width = 10 * self.scale_of_sprites
-        self.menu_button_scale = self.scale_of_sprites
-        self.menu_button = ShapeNode(path = menu_button_shape,
+        # add back button
+        back_button_position = Vector2(self.size_of_screen_x * 0.1, self.size_of_screen_y * 0.85)
+        back_button_shape = ui.Path.oval(0, 0, 120, 120)
+        back_button_shape.line_width = 10 * self.scale_of_sprites
+        self.back_button_scale = self.scale_of_sprites
+        self.back_button = ShapeNode(path = back_button_shape,
                                      fill_color = '#e38926',
                                      stroke_color = '#c97922',
                                      parent = self,
-                                     position = menu_button_position,
-                                     scale = self.menu_button_scale)
-        # add menu symbol
-        self.menu_symbol_scale = 1.5 * self.scale_of_sprites 
-        self.menu_symbol = SpriteNode('./assets/sprites/white_arrow_left.png',
+                                     position = back_button_position,
+                                     scale = self.back_button_scale)
+        # add back symbol
+        self.back_symbol_scale = 1.5 * self.scale_of_sprites 
+        self.back_symbol = SpriteNode('./assets/sprites/white_arrow_left.png',
                                       parent = self,
-                                      position = menu_button_position,
-                                      scale = self.menu_symbol_scale)
+                                      position = back_button_position,
+                                      scale = self.back_symbol_scale)
         # add box to contain credits
         credits_box_position = Vector2(self.size_of_screen_x * 0.55, self.size_of_screen_y * 0.7)
         credits_box_size = Vector2(self.size_of_screen_x * 0.7, self.size_of_screen_y * 0.4)
@@ -93,7 +93,7 @@ class InstructionsScene(Scene):
         image_explanation_position = Vector2(self.center_of_screen_x, self.size_of_screen_y * 0.45)
         self.image_explanation = LabelNode(text = 'Click on an image below for detailed instructions of each game',
                                            font = ('Futura', 35),
-                                           color = self.menu_button.fill_color,
+                                           color = self.back_button.fill_color,
                                            parent = self,
                                            position = image_explanation_position,
                                            scale = self.scale_of_sprites)
@@ -141,23 +141,23 @@ class InstructionsScene(Scene):
                                       position = game7_image_position,
                                       scale = self.game7_image_scale)
 
-        # add back button
-        back_button_position = Vector2(self.center_of_screen_x, self.size_of_screen_y * 0.9 - self.size_of_screen_y)
-        back_button_shape = ui.Path.oval(0, 0, 120, 120)
-        back_button_shape.line_width = 10 * self.scale_of_sprites
-        self.back_button_scale = self.scale_of_sprites
-        self.back_button = ShapeNode(path = back_button_shape,
-                                     fill_color = '#e38926',
-                                     stroke_color = '#c97922',
-                                     parent = self,
-                                     position = back_button_position,
-                                     scale = self.back_button_scale)
-        # add back symbol
-        self.back_symbol_scale = 1.5 * self.scale_of_sprites 
-        self.back_symbol = SpriteNode('./assets/sprites/white_arrow_up.png',
-                                      parent = self,
-                                      position = back_button_position,
-                                      scale = self.back_symbol_scale)
+        # add up button
+        up_button_position = Vector2(self.center_of_screen_x, self.size_of_screen_y * 0.9 - self.size_of_screen_y)
+        up_button_shape = ui.Path.oval(0, 0, 120, 120)
+        up_button_shape.line_width = 10 * self.scale_of_sprites
+        self.up_button_scale = self.scale_of_sprites
+        self.up_button = ShapeNode(path = up_button_shape,
+                                   fill_color = '#e38926',
+                                   stroke_color = '#c97922',
+                                   parent = self,
+                                   position = up_button_position,
+                                   scale = self.up_button_scale)
+        # add up symbol
+        self.up_symbol_scale = 1.5 * self.scale_of_sprites 
+        self.up_symbol = SpriteNode('./assets/sprites/white_arrow_up.png',
+                                    parent = self,
+                                    position = up_button_position,
+                                    scale = self.up_symbol_scale)
         # add placeholder Image
         placeholder_image_position = Vector2(self.size_of_screen_x * 0.75, self.size_of_screen_y * 0.425 - self.size_of_screen_y)
         placeholder_image_size = Vector2(self.size_of_screen_x * 0.45, self.size_of_screen_y * 0.7)
@@ -187,7 +187,7 @@ class InstructionsScene(Scene):
                                                scale = self.scale_of_sprites)
         
         # List of items for animating purposes
-        self.scene_items = [self.menu_button, self.menu_symbol, self.credits_box, self.credits_title, self.credits, self.image_explanation, self.game1_image, self.game2_image, self.game3_image, self.game4_image, self.game5_image, self.game6_image, self.game7_image, self.back_button, self.back_symbol, self.placeholder_image, self.text_area, self.placeholder_text_label]
+        self.scene_items = [self.back_button, self.back_symbol, self.credits_box, self.credits_title, self.credits, self.image_explanation, self.game1_image, self.game2_image, self.game3_image, self.game4_image, self.game5_image, self.game6_image, self.game7_image, self.up_button, self.up_symbol, self.placeholder_image, self.text_area, self.placeholder_text_label]
         
     
     def update(self):
@@ -197,9 +197,9 @@ class InstructionsScene(Scene):
     def touch_began(self, touch):
         # this method is called, when user touches the screen
         
-        if self.menu_button.frame.contains_point(touch.location):
-            self.menu_button.scale = self.menu_button.scale * 0.9
-            self.menu_symbol.scale = self.menu_symbol.scale * 0.9
+        if self.back_button.frame.contains_point(touch.location):
+            self.back_button.scale = self.back_button.scale * 0.9
+            self.back_symbol.scale = self.back_symbol.scale * 0.9
         
         if self.game1_image.frame.contains_point(touch.location):
             self.game1_image.scale = self.game1_image.scale * 0.9
@@ -222,9 +222,9 @@ class InstructionsScene(Scene):
         if self.game7_image.frame.contains_point(touch.location):
             self.game7_image.scale = self.game7_image.scale * 0.9
             
-        if self.back_button.frame.contains_point(touch.location):
-            self.back_button.scale = self.back_button.scale * 0.9
-            self.back_symbol.scale = self.back_symbol.scale * 0.9
+        if self.up_button.frame.contains_point(touch.location):
+            self.up_button.scale = self.up_button.scale * 0.9
+            self.up_symbol.scale = self.up_symbol.scale * 0.9
         
         
     
@@ -235,8 +235,8 @@ class InstructionsScene(Scene):
     def touch_ended(self, touch):
         # this method is called, when user releases a finger from the screen
         #reset scales
-        self.menu_button.scale = self.menu_button_scale
-        self.menu_symbol.scale = self.menu_symbol_scale
+        self.back_button.scale = self.back_button_scale
+        self.back_symbol.scale = self.back_symbol_scale
         self.game1_image.scale = self.game1_image_scale
         self.game2_image.scale = self.game2_image_scale
         self.game3_image.scale = self.game3_image_scale
@@ -244,8 +244,8 @@ class InstructionsScene(Scene):
         self.game5_image.scale = self.game5_image_scale
         self.game6_image.scale = self.game6_image_scale
         self.game7_image.scale = self.game7_image_scale
-        self.back_button.scale = self.back_button_scale
-        self.back_symbol.scale = self.back_symbol_scale
+        self.up_button.scale = self.up_button_scale
+        self.up_symbol.scale = self.up_symbol_scale
         
         #Move to instructions scene
         if self.game1_image.frame.contains_point(touch.location):
@@ -278,11 +278,11 @@ class InstructionsScene(Scene):
             self.placeholder_text_label.text = self.game7_description
         
         #move back to help scene
-        if self.back_button.frame.contains_point(touch.location):
+        if self.up_button.frame.contains_point(touch.location):
             self.animate_info_to_help()
         
         #dismiss scene
-        if self.menu_button.frame.contains_point(touch.location):
+        if self.back_button.frame.contains_point(touch.location):
             self.dismiss_modal_scene()
     
     def did_change_size(self):

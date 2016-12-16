@@ -41,7 +41,7 @@ class GenericGame():
         self.cover = ShapeNode(path = self.game_shape,
                                fill_color = 'black',
                                stroke_color = 'black',
-                               z_position = 10,
+                               z_position = 5,
                                alpha = 0.75,
                                parent = input_parent,
                                position = self.game_position)
@@ -63,6 +63,11 @@ class GenericGame():
     def get_game_cover(self):
         #get the game cover property
         return self.cover
+    
+    def activate_game(self):
+        # this method activates the game
+        self.game_active = True
+        self.cover.alpha = 0
     
     def game_over(self):
         # this method calls a gameover and shuts down the game
