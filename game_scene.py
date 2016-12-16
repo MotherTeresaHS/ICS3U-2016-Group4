@@ -50,6 +50,7 @@ class GameScene(Scene):
         self.game2_pause_count = 0
         self.game3_shape_on_screen = False
         self.game3_timer_count = 0
+        self.game3_initial_spawn = False
         
         # create a timer to keep track of how far the player has progressed
         self.start_time = time.time()
@@ -77,10 +78,11 @@ class GameScene(Scene):
         # this method is called, hopefully, 60 times a second
         
         # keep track of which games are active
-        if time.time() - self.start_time > 3 and not self.game2.get_game_active() and not self.game_over:
+        if time.time() - self.start_time > 15 and not self.game2.get_game_active() and not self.game_over:
             self.game2.activate_game()
+            #pass
         
-        if time.time() - self.start_time > 6 and not self.game3.get_game_active() and not self.game_over:
+        if time.time() - self.start_time > 30 and not self.game3.get_game_active() and not self.game_over:
             self.game3.activate_game()
         
         # game 1
@@ -113,8 +115,9 @@ class GameScene(Scene):
                 self.game2.set_game_paused(False)
         
         # game 3
-        if self.game3.get_game_active() and not self.game3_shape_on_screen and not self.game_over and random_game_action_chance >= 20 and random_game_action_chance < 24:
+        if self.game3.get_game_active() and not self.game_over and not self.game3_initial_spawn and random_game_action_chance >= 20 and random_game_action_chance < 24:
             self.game3.create_shape(self)
+            self.game3_initial_spawn = True
             self.game3_shape_on_screen = True
             self.game3_timer_count = 0
         
@@ -185,32 +188,35 @@ class GameScene(Scene):
         
         # game 3
         if not self.game_over and self.game3.get_game_active() and self.game3.get_button_one().frame.contains_point(touch.location):
-            if self.game3.get_shape_type() == 1:
-                self.game3.get_incoming_shape()[0].remove_from_parent()
-                self.game3.get_incoming_shape().remove(self.game3.get_incoming_shape()[0])
-                self.game3_shape_on_screen = False
-                self.game3_timer_count = 0
-                self.game3.get_timer().text = '5'
-            else:
-                self.end_game()
+            for shape in self.game3.get_incoming_shape():
+                if self.game3.get_shape_type() == 1:
+                    shape.remove_from_parent()
+                    self.game3.get_incoming_shape().remove(shape)
+                    self.game3_timer_count = 0
+                    self.game3.get_timer().text = '5'
+                    self.game3.create_shape(self)
+                else:
+                    self.end_game()
         if not self.game_over and self.game3.get_game_active() and self.game3.get_button_two().frame.contains_point(touch.location):
-            if self.game3.get_shape_type() == 2:
-                self.game3.get_incoming_shape()[0].remove_from_parent()
-                self.game3.get_incoming_shape().remove(self.game3.get_incoming_shape()[0])
-                self.game3_shape_on_screen = False
-                self.game3_timer_count = 0
-                self.game3.get_timer().text = '5'
-            else:
-                self.end_game()
+            for shape in self.game3.get_incoming_shape():
+                if self.game3.get_shape_type() == 2:
+                    shape.remove_from_parent()
+                    self.game3.get_incoming_shape().remove(shape)
+                    self.game3_timer_count = 0
+                    self.game3.get_timer().text = '5'
+                    self.game3.create_shape(self)
+                else:
+                    self.end_game()
         if not self.game_over and self.game3.get_game_active() and self.game3.get_button_three().frame.contains_point(touch.location):
-            if self.game3.get_shape_type() == 3:
-                self.game3.get_incoming_shape()[0].remove_from_parent()
-                self.game3.get_incoming_shape().remove(self.game3.get_incoming_shape()[0])
-                self.game3_shape_on_screen = False
-                self.game3_timer_count = 0
-                self.game3.get_timer().text = '5'
-            else:
-                self.end_game()
+            for shape in self.game3.get_incoming_shape():
+                if self.game3.get_shape_type() == 3:
+                    shape.remove_from_parent()
+                    self.game3.get_incoming_shape().remove(shape)
+                    self.game3_timer_count = 0
+                    self.game3.get_timer().text = '5'
+                    self.game3.create_shape(self)
+                else:
+                    self.end_game()
         
         
         
