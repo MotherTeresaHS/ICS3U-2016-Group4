@@ -14,7 +14,10 @@ class GameFour(GenericGame):
         # This method is called when a game object is called
         
         GenericGame.__init__(self, input_parent, game_position_x, game_position_y)
+        # edit game background and z_position
         GenericGame.get_game_background(self).fill_color = '#989898'
+        GenericGame.get_game_background(self).z_position = 4
+        GenericGame.get_game_cover(self).z_position = 8
         
         #create arrow pointing right
         arrow_position = Vector2(self.size_of_screen_x * (5/6), self.size_of_screen_y * (5/9))
@@ -23,7 +26,7 @@ class GameFour(GenericGame):
                                       color = '#ffd12b',
                                       parent = input_parent,
                                       position = arrow_position,
-                                      z_position = 2,
+                                      z_position = 5,
                                       size = arrow_size,
                                       scale = self.scale_of_sprites)
         #create track for slider
@@ -35,7 +38,7 @@ class GameFour(GenericGame):
                                stroke_color = 'clear',
                                parent = input_parent,
                                position = self.track_position,
-                               z_position = 4,
+                               z_position = 5,
                                scale = self.scale_of_sprites)
         # create track the the player sees
         seen_track_size = Vector2(self.size_of_screen_x * (6/21), track_size.y)
@@ -45,7 +48,7 @@ class GameFour(GenericGame):
                                     stroke_color = '#505050',
                                     parent = input_parent,
                                     position = self.track_position,
-                                    z_position = 2,
+                                    z_position = 6,
                                     scale = self.scale_of_sprites)
         # create slider
         slider_position = Vector2(self.size_of_screen_x * (5/6), self.track_position.y)
@@ -53,7 +56,7 @@ class GameFour(GenericGame):
         self.slider = SpriteNode('./assets/sprites/slider.png',
                                  parent = input_parent,
                                  position = slider_position,
-                                 z_position = 3,
+                                 z_position = 7,
                                  size = slider_size,
                                  scale = self.scale_of_sprites)
         

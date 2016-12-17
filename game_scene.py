@@ -5,6 +5,7 @@
 # Edited by: Matthew Lourenco
 # Dec 14 2016: created game scene. made scene read file to determine scale of sprites
 # Dec 15 2016: game 1, 2, and 3 functional
+# Dec 16 2016: game 4, 5, and 6 functional
 
 from __future__ import division
 from scene import *
@@ -72,8 +73,6 @@ class GameScene(Scene):
         self.game7 = GameSeven(self, self.center_of_screen_x, self.center_of_screen_y)
         
         self.game1.activate_game()
-        
-        
     
     def update(self):
         # this method is called, hopefully, 60 times a second
@@ -95,6 +94,11 @@ class GameScene(Scene):
         if time.time() - self.start_time > 60 and not self.game5.get_game_active() and not self.game_over:
             self.game5.activate_game()
             self.game5.create_shape(self)
+            #pass
+        
+        if time.time() - self.start_time > 1 and not self.game6.get_game_active() and not self.game_over:
+            self.game6.activate_game()
+            self.game6.create_truck(self)
             #pass
         
         # game 1
@@ -174,6 +178,14 @@ class GameScene(Scene):
         if not self.game_over and self.game5_timer_count == 150:
             self.game5.get_timer().text = '0'
             self.end_game()
+        
+        # game 6
+        if self.game6.get_truck().position.y < -90 and self.game6.get_game_active() and not self.game_over:
+            self.game6.create_truck(self)
+        
+        if self.game6.get_player_car().frame.intersects(self.game6.get_truck().frame) and not self.game_over and self.game6.get_game_active():
+            self.end_game()
+        
         
     
     def touch_began(self, touch):
@@ -288,6 +300,16 @@ class GameScene(Scene):
             else:
                 self.end_game()
         
+        # game 6
+        if not self.game_over and self.game6.get_game_active() and self.game6.get_left_arrow().frame.contains_point(touch.location):
+            player_car_move_action = Action.move_to(self.size_of_screen_x * (19/24), self.game6.get_player_car().position.y, 1.0, TIMING_SINODIAL)
+            self.game6.get_player_car().run_action(player_car_move_action)
+        
+        if not self.game_over and self.game6.get_game_active() and self.game6.get_right_arrow().frame.contains_point(touch.location):
+            player_car_move_action = Action.move_to(self.size_of_screen_x * (21/24), self.game6.get_player_car().position.y, 1.0, TIMING_SINODIAL)
+            self.game6.get_player_car().run_action(player_car_move_action)
+        
+        
         
     
     def did_change_size(self):
@@ -315,6 +337,10 @@ class GameScene(Scene):
         self.game5.game_over()
         self.game6.game_over()
         self.game7.game_over()
+        
+        # remove temp variables
+        self.menu_button.remove_from_parent()
+        self.menu_text.remove_from_parent()
         
         # add 'game over' text
         game_over_position = Vector2(self.center_of_screen_x, self.size_of_screen_y * 0.7)
