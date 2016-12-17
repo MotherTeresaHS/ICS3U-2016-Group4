@@ -96,7 +96,7 @@ class GameScene(Scene):
             self.game5.create_shape(self)
             #pass
         
-        if time.time() - self.start_time > 1 and not self.game6.get_game_active() and not self.game_over:
+        if time.time() - self.start_time > 75 and not self.game6.get_game_active() and not self.game_over:
             self.game6.activate_game()
             self.game6.create_truck(self)
             #pass
