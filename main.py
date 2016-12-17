@@ -16,6 +16,8 @@
 #   and not use any of the mornal ones built into Pythonista.
 #
 # To exit the app in Pythonista, pull down with 2 fingers.
+# Edited by: Matthew Lourenco
+# 17 Dec 2016: locked oruentation
 
 from scene import *
 import ui
@@ -27,4 +29,4 @@ main_view = ui.View()
 scene_view = SceneView(frame = main_view.bounds, flex = 'WH')
 main_view.add_subview(scene_view)
 scene_view.scene = SplashScene()
-main_view.present(hide_title_bar = True, animated = False)
+main_view.present(hide_title_bar = True, animated = True, orientations = (LANDSCAPE, 'landscape-right') )

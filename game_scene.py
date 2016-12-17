@@ -6,6 +6,7 @@
 # Dec 14 2016: created game scene. made scene read file to determine scale of sprites
 # Dec 15 2016: game 1, 2, and 3 functional
 # Dec 16 2016: game 4, 5, and 6 functional
+# Dec 17 2016: removed scaling of sprites
 
 from __future__ import division
 from scene import *
@@ -232,8 +233,8 @@ class GameScene(Scene):
                 self.meteor_on_screen = False
         
         # game 2
-        self.game2.get_button().scale = self.scale_of_sprites
-        self.game2.get_button_shadow().scale = self.scale_of_sprites
+        self.game2.get_button().scale = 1
+        self.game2.get_button_shadow().scale = 1
         
         if not self.game_over and self.game2.get_game_active() and self.game2.get_button().frame.contains_point(touch.location):
             if self.game2.get_button_is_red():

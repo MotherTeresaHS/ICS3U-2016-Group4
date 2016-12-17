@@ -41,8 +41,7 @@ class GameThree(GenericGame):
                                     color = 'white',
                                     parent = input_parent,
                                     position = timer_circle_position,
-                                    z_position = 3,
-                                    scale = self.scale_of_sprites)
+                                    z_position = 3)
         #add 3 buttons on right of game
         button1_position = Vector2(self.size_of_screen_x * (5/18), self.size_of_screen_y * (11/18))
         button2_position = Vector2(self.size_of_screen_x * (5/18), self.size_of_screen_y * (1/2))

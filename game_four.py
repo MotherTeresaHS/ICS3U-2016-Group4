@@ -27,8 +27,7 @@ class GameFour(GenericGame):
                                       parent = input_parent,
                                       position = arrow_position,
                                       z_position = 5,
-                                      size = arrow_size,
-                                      scale = self.scale_of_sprites)
+                                      size = arrow_size)
         #create track for slider
         self.track_position = Vector2(self.size_of_screen_x * (5/6), self.size_of_screen_y * (4/9))
         track_size = Vector2(self.size_of_screen_x * (5/18), self.size_of_screen_y * (2/27))
@@ -38,8 +37,7 @@ class GameFour(GenericGame):
                                stroke_color = 'clear',
                                parent = input_parent,
                                position = self.track_position,
-                               z_position = 5,
-                               scale = self.scale_of_sprites)
+                               z_position = 5)
         # create track the the player sees
         seen_track_size = Vector2(self.size_of_screen_x * (6/21), track_size.y)
         seen_track_shape = ui.Path.rect(0, 0, seen_track_size.x, seen_track_size.y)
@@ -48,8 +46,7 @@ class GameFour(GenericGame):
                                     stroke_color = '#505050',
                                     parent = input_parent,
                                     position = self.track_position,
-                                    z_position = 6,
-                                    scale = self.scale_of_sprites)
+                                    z_position = 6)
         # create slider
         slider_position = Vector2(self.size_of_screen_x * (5/6), self.track_position.y)
         slider_size = Vector2(self.size_of_screen_y * (2/27), self.size_of_screen_y * (2/27))
@@ -57,8 +54,7 @@ class GameFour(GenericGame):
                                  parent = input_parent,
                                  position = slider_position,
                                  z_position = 7,
-                                 size = slider_size,
-                                 scale = self.scale_of_sprites)
+                                 size = slider_size)
         
     
     #getters and setters

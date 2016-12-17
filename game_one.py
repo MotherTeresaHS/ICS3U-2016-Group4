@@ -24,14 +24,15 @@ class GameOne(GenericGame):
                                           size = self.game_size)
         #create power core
         power_core_position = Vector2(self.game_position.x, self.size_of_screen_y * (2/3) + 20)
+        power_core_size = Vector2(self.size_of_screen_x * (1/6), self.size_of_screen_y * (1/18))
         self.power_core = SpriteNode('./assets/sprites/power_core.png',
                                      parent = input_parent,
                                      position = power_core_position,
                                      z_position = 3,
-                                     scale = self.scale_of_sprites)
+                                     size = power_core_size)
         
         #properties
-        self.meteor_scale = 1
+        self.meteor_size = Vector2(self.size_of_screen_y * (1/6), self.size_of_screen_y * (1/6))
         self.meteors = []
         self.meteor_move_speed = 20.0
         
@@ -60,7 +61,7 @@ class GameOne(GenericGame):
                                        parent = input_meteor_parent,
                                        position = meteor_start_position,
                                        z_position = 3,
-                                       scale = self.meteor_scale))
+                                       size = self.meteor_size))
         
         meteor_move_action = Action.move_to(meteor_end_position.x,
                                             meteor_end_position.y,

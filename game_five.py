@@ -78,8 +78,7 @@ class GameFive(GenericGame):
                                     color = 'white',
                                     parent = input_parent,
                                     position = timer_circle_position,
-                                    z_position = 3,
-                                    scale = self.scale_of_sprites)
+                                    z_position = 3)
         
     
     #getters and setters

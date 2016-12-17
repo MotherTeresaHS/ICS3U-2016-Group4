@@ -7,6 +7,7 @@
 # 9 Dec 2016: created placeholder image, text area and placeholder text, merged this scene with the help scene and animated the transition
 # 13 Dec 2016: Created descriptions for each game, made descriptions and pictures change based on the button pressed
 # 14 Dec 2016: made scene read file to determine scale of sprites
+# 17 Dec 2016: added images for first 6 games
 
 from scene import *
 import ui
@@ -99,38 +100,38 @@ class InstructionsScene(Scene):
                                            scale = self.scale_of_sprites)
         # add 7 game images
         game1_image_position = Vector2(self.size_of_screen_x * 0.125, self.size_of_screen_y * 0.3)
-        self.game1_image_scale = 3 * self.scale_of_sprites
-        self.game1_image = SpriteNode('assets/sprites/button1.png',
+        self.game1_image_scale = 0.25 * self.scale_of_sprites
+        self.game1_image = SpriteNode('assets/sprites/game1_screenshot.png',
                                       parent = self,
                                       position = game1_image_position,
                                       scale = self.game1_image_scale)
         game2_image_position = Vector2(self.size_of_screen_x * 0.375, self.size_of_screen_y * 0.3)
-        self.game2_image_scale = 3 * self.scale_of_sprites
-        self.game2_image = SpriteNode('assets/sprites/button2.png',
+        self.game2_image_scale = 0.25 * self.scale_of_sprites
+        self.game2_image = SpriteNode('assets/sprites/game2_screenshot.png',
                                       parent = self,
                                       position = game2_image_position,
                                       scale = self.game2_image_scale)
         game3_image_position = Vector2(self.size_of_screen_x * 0.625, self.size_of_screen_y * 0.3)
-        self.game3_image_scale = 3 * self.scale_of_sprites
-        self.game3_image = SpriteNode('assets/sprites/button3.png',
+        self.game3_image_scale = 0.25 * self.scale_of_sprites
+        self.game3_image = SpriteNode('assets/sprites/game3_screenshot.png',
                                       parent = self,
                                       position = game3_image_position,
                                       scale = self.game3_image_scale)
         game4_image_position = Vector2(self.size_of_screen_x * 0.875, self.size_of_screen_y * 0.3)
-        self.game4_image_scale = 3 * self.scale_of_sprites
-        self.game4_image = SpriteNode('assets/sprites/buttonA.png',
+        self.game4_image_scale = 0.25 * self.scale_of_sprites
+        self.game4_image = SpriteNode('assets/sprites/game4_screenshot.png',
                                       parent = self,
                                       position = game4_image_position,
                                       scale = self.game4_image_scale)
         game5_image_position = Vector2(self.size_of_screen_x * 0.25, self.size_of_screen_y * 0.15)
-        self.game5_image_scale = 3 * self.scale_of_sprites
-        self.game5_image = SpriteNode('assets/sprites/buttonB.png',
+        self.game5_image_scale = 0.25 * self.scale_of_sprites
+        self.game5_image = SpriteNode('assets/sprites/game5_screenshot.png',
                                       parent = self,
                                       position = game5_image_position,
                                       scale = self.game5_image_scale)
         game6_image_position = Vector2(self.size_of_screen_x * 0.5, self.size_of_screen_y * 0.15)
-        self.game6_image_scale = 3 * self.scale_of_sprites
-        self.game6_image = SpriteNode('assets/sprites/buttonL.png',
+        self.game6_image_scale = 0.25 * self.scale_of_sprites
+        self.game6_image = SpriteNode('assets/sprites/game6_screenshot.png',
                                       parent = self,
                                       position = game6_image_position,
                                       scale = self.game6_image_scale)
@@ -161,11 +162,12 @@ class InstructionsScene(Scene):
         # add placeholder Image
         placeholder_image_position = Vector2(self.size_of_screen_x * 0.75, self.size_of_screen_y * 0.425 - self.size_of_screen_y)
         placeholder_image_size = Vector2(self.size_of_screen_x * 0.45, self.size_of_screen_y * 0.7)
+        placeholder_image_scale = 0.7 * self.scale_of_sprites
         self.placeholder_image = SpriteNode('./assets/sprites/black_massive_multiplayer.png',
                                             parent = self,
                                             position = placeholder_image_position,
                                             size = placeholder_image_size,
-                                            scale = self.scale_of_sprites)
+                                            scale = placeholder_image_scale)
         # add text area
         text_area_position = Vector2(self.size_of_screen_x * 0.25, self.size_of_screen_y * 0.425 - self.size_of_screen_y)
         text_area_size = Vector2(placeholder_image_size.x, placeholder_image_size.y)
