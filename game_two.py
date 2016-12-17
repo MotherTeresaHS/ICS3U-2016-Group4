@@ -32,7 +32,8 @@ class GameTwo(GenericGame):
                                 stroke_color = '#aa1c1c',
                                 parent = input_parent,
                                 position = button_position,
-                                z_position = 2)
+                                z_position = 2,
+                                scale = self.scale_of_sprites)
         # add button shadow
         button_shadow_position = Vector2(button_position.x, button_position.y - 10)
         self.button_shadow = ShapeNode(path = button_shape,
@@ -41,7 +42,8 @@ class GameTwo(GenericGame):
                                        parent = input_parent,
                                        position = button_shadow_position,
                                        z_position = 1,
-                                       alpha = 0.75)
+                                       alpha = 0.75,
+                                       scale = self.scale_of_sprites)
         # add timer on button
         self.timer = LabelNode(text = '',
                                color = '#7efc89',

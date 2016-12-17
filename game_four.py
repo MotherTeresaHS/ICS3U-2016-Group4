@@ -14,6 +14,7 @@ class GameFour(GenericGame):
         # This method is called when a game object is called
         
         GenericGame.__init__(self, input_parent, game_position_x, game_position_y)
+        GenericGame.get_game_background(self).fill_color = '#989898'
         
         #create arrow pointing right
         arrow_position = Vector2(self.size_of_screen_x * (5/6), self.size_of_screen_y * (5/9))
@@ -53,7 +54,8 @@ class GameFour(GenericGame):
                                  parent = input_parent,
                                  position = slider_position,
                                  z_position = 3,
-                                 size = slider_size)
+                                 size = slider_size,
+                                 scale = self.scale_of_sprites)
         
     
     #getters and setters

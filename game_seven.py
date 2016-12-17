@@ -21,3 +21,5 @@ class GameSeven(GenericGame):
         self.game_shape.line_width = 5
         GenericGame.get_game_background(self).path = self.game_shape
         GenericGame.get_game_cover(self).path = self.game_shape
+        GenericGame.get_game_background(self).z_position = 6
+        GenericGame.get_game_cover(self).z_position = 7

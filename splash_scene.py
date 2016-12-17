@@ -24,7 +24,7 @@ class SplashScene(Scene):
         self.center_of_screen_x = self.size_of_screen_x/2
         self.center_of_screen_y = self.size_of_screen_y/2
         
-        self.scale_of_sprites = 1
+        self.scale_of_sprites = 1.0
         
         # create timer, so that after 2 seconds move to next scene
         self.start_time = time.time()

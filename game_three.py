@@ -49,7 +49,7 @@ class GameThree(GenericGame):
         button3_position = Vector2(self.size_of_screen_x * (5/18), self.size_of_screen_y * (7/18))
         button_size = Vector2(self.size_of_screen_x * (1/9), self.size_of_screen_y * (1/9))
         button_shape = ui.Path.rect(0, 0, button_size.x, button_size.y)
-        button_shape.line_width = 5 * self.scale_of_sprites
+        button_shape.line_width = 5
         self.button1 = ShapeNode(path = button_shape,
                                  fill_color = 'clear',
                                  stroke_color = 'black',

@@ -48,11 +48,10 @@ class GameScene(Scene):
         self.game2_count = 0
         self.game2_pause_counter = False
         self.game2_pause_count = 0
-        self.game3_shape_on_screen = False
         self.game3_timer_count = 0
-        self.game3_initial_spawn = False
         self.game4_slider_touched = False
         self.game4_slider_move_speed = 0.1
+        self.game5_timer_count = 0
         
         # create a timer to keep track of how far the player has progressed
         self.start_time = time.time()
@@ -91,6 +90,12 @@ class GameScene(Scene):
         
         if time.time() - self.start_time > 45 and not self.game4.get_game_active() and not self.game_over:
             self.game4.activate_game()
+            #pass
+        
+        if time.time() - self.start_time > 60 and not self.game5.get_game_active() and not self.game_over:
+            self.game5.activate_game()
+            self.game5.create_shape(self)
+            #pass
         
         # game 1
         random_game_action_chance = random.randint(0, 500)
@@ -154,6 +159,21 @@ class GameScene(Scene):
         if not self.game4.get_track().frame.contains_rect(self.game4.get_slider().frame) and self.game4.get_slider().position.x < self.size_of_screen_x * (5/6) and self.game4.get_game_active():
             self.end_game()
         
+        # game 5
+        if self.game5.get_game_active() and not self.game_over:
+            self.game5_timer_count = self.game5_timer_count + 1
+        
+        if not self.game_over and self.game5_timer_count == 30:
+            self.game5.get_timer().text = '4'
+        if not self.game_over and self.game5_timer_count == 60:
+            self.game5.get_timer().text = '3'
+        if not self.game_over and self.game5_timer_count == 90:
+            self.game5.get_timer().text = '2'
+        if not self.game_over and self.game5_timer_count == 120:
+            self.game5.get_timer().text = '1'
+        if not self.game_over and self.game5_timer_count == 150:
+            self.game5.get_timer().text = '0'
+            self.end_game()
         
     
     def touch_began(self, touch):
@@ -176,7 +196,7 @@ class GameScene(Scene):
         # this method is called, when user moves a finger around on the screen
         
         # game 4
-        if self.game4.get_track().frame.contains_point(touch.location):
+        if self.game4.get_track().frame.contains_point(touch.location) and self.game4_slider_touched:
             self.game4.get_slider().position = Vector2(touch.location.x, self.game4.get_slider_y())
         
         
@@ -250,6 +270,24 @@ class GameScene(Scene):
         # game 4
         self.game4_slider_touched = False
         
+        # game 5
+        if not self.game_over and self.game5.get_game_active() and self.game5.get_diamond_button().frame.contains_point(touch.location):
+            if self.game5.get_shape_type() == 1:
+                self.game5.get_incoming_shape().remove_from_parent()
+                self.game5.get_timer().text = '5'
+                self.game5_timer_count = 0
+                self.game5.create_shape(self)
+            else:
+                self.end_game()
+        if not self.game_over and self.game5.get_game_active() and self.game5.get_square_button().frame.contains_point(touch.location):
+            if self.game5.get_shape_type() == 2:
+                self.game5.get_incoming_shape().remove_from_parent()
+                self.game5.get_timer().text = '5'
+                self.game5_timer_count = 0
+                self.game5.create_shape(self)
+            else:
+                self.end_game()
+        
         
     
     def did_change_size(self):
@@ -285,7 +323,7 @@ class GameScene(Scene):
                                         color = '#49db56',
                                         parent = self,
                                         position = game_over_position,
-                                        z_position = 8,
+                                        z_position = 15,
                                         scale = self.scale_of_sprites)
         # add menu button
         menu_button_position = Vector2(self.center_of_screen_x, self.center_of_screen_y)
@@ -298,7 +336,7 @@ class GameScene(Scene):
                                      stroke_color = '#4652d1',
                                      parent = self,
                                      position = menu_button_position,
-                                     z_position = 7,
+                                     z_position = 14,
                                      scale = self.menu_button_scale)
         # add menu text
         self.menu_text_scale = self.scale_of_sprites
@@ -307,7 +345,7 @@ class GameScene(Scene):
                                    font = ('futura', 60),
                                    parent = self,
                                    position = menu_button_position,
-                                   z_position = 8,
+                                   z_position = 15,
                                    scale = self.menu_text_scale)
         
     
