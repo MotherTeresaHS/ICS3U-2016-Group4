@@ -433,8 +433,6 @@ class GameScene(Scene):
         
         self.player_name = str(self.player_name).upper() + ' - '
         
-        print(self.player_name)
-        
         # write player name to file
         
         score_added = False
@@ -445,6 +443,8 @@ class GameScene(Scene):
             if high_scores_table[element][1] < self.score and not score_added:
                 high_scores_table.insert(element, [self.player_name, self.score])
                 score_added = True
+        if not score_added:
+            high_scores_table.append([self.player_name, self.score])
         high_scores_list.seek(0)
         json.dump(high_scores_table, high_scores_list)
         high_scores_list.close()

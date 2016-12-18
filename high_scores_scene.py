@@ -118,4 +118,6 @@ class HighScoresScene(Scene):
             if self.number_of_elemts < 11:
                 self.high_scores_text.text = self.high_scores_text.text + element_high_scores[0] + str(element_high_scores[1]).zfill(9) + '\n'
                 self.number_of_elemts = self.number_of_elemts + 1
+        if self.number_of_elemts == 0:
+            self.high_scores_text.text = 'No high scores yet!\nPress play to set your own now!'
         high_scores_list.close()
