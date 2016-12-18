@@ -32,7 +32,7 @@ class GenericGame():
         self.game_shape = ui.Path.rect(0, 0, self.game_size.x, self.game_size.y)
         self.game_shape.line_width = 5
         self.game_background = ShapeNode(path = self.game_shape,
-                                         fill_color = '#e5e5e5',
+                                         fill_color = '#462317',
                                          stroke_color = 'black',
                                          z_position = 1,
                                          parent = input_parent,

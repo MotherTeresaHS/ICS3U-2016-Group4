@@ -33,14 +33,14 @@ class GameOne(GenericGame):
         
         #properties
         self.meteor_size = Vector2(self.size_of_screen_y * (1/6), self.size_of_screen_y * (1/6))
-        self.meteors = []
+        self.meteor = LabelNode(text = '', color = 'clear', position = (-100, -100), z_position = 0, parent = input_parent)
         self.meteor_move_speed = 20.0
         
     
     #getters and setters
-    def get_meteors(self):
+    def get_meteor(self):
         # get meteors property
-        return self.meteors
+        return self.meteor
     
     def get_power_core(self):
         # get power core property
@@ -57,20 +57,19 @@ class GameOne(GenericGame):
         meteor_end_position = Vector2(self.size_of_screen_x * (1/6), self.size_of_screen_y * (2/3))
         self.meteor_scale = self.scale_of_sprites * 0.5
         temp_texture = './assets/sprites/meteor{0}.png'.format(str(random.randint(1,5)))
-        self.meteors.append(SpriteNode(temp_texture,
-                                       parent = input_meteor_parent,
-                                       position = meteor_start_position,
-                                       z_position = 3,
-                                       size = self.meteor_size))
+        self.meteor = SpriteNode(temp_texture,
+                                 parent = input_meteor_parent,
+                                 position = meteor_start_position,
+                                 z_position = 3,
+                                 size = self.meteor_size)
         
         meteor_move_action = Action.move_to(meteor_end_position.x,
                                             meteor_end_position.y,
                                             self.meteor_move_speed)
         
-        self.meteors[len(self.meteors) - 1].run_action(meteor_move_action)
+        self.meteor.run_action(meteor_move_action)
     
     def game_over(self):
         # this method calls a game over
         GenericGame.game_over(self)
-        for meteor in self.meteors:
-            meteor.remove_all_actions()
+        self.meteor.remove_all_actions()

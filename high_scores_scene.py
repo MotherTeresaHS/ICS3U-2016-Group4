@@ -112,6 +112,10 @@ class HighScoresScene(Scene):
         high_scores_list = open('./high_scores.txt')
         high_scores_table = json.load(high_scores_list)
         self.high_scores_text.text = ''
+        self.max_elements_reached = False
+        self.number_of_elemts = 0
         for element_high_scores in high_scores_table:
-            self.high_scores_text.text = self.high_scores_text.text + element_high_scores[0] + str(element_high_scores[1]).zfill(7) + '\n'
+            if self.number_of_elemts < 11:
+                self.high_scores_text.text = self.high_scores_text.text + element_high_scores[0] + str(element_high_scores[1]).zfill(9) + '\n'
+                self.number_of_elemts = self.number_of_elemts + 1
         high_scores_list.close()

@@ -12,6 +12,8 @@ from __future__ import division
 from scene import *
 import ui
 import time
+import console
+import json
 from numpy import random
 from game_one import *
 from game_two import *
@@ -53,7 +55,13 @@ class GameScene(Scene):
         self.game3_timer_count = 0
         self.game4_slider_touched = False
         self.game4_slider_move_speed = 0.1
+        self.game4_score_count = 0
         self.game5_timer_count = 0
+        self.game7_velocity_x = 0
+        self.game7_velocity_y = 0
+        
+        self.score = 0
+        self.score_label_text = 'Score: 0000000'
         
         # create a timer to keep track of how far the player has progressed
         self.start_time = time.time()
@@ -64,6 +72,23 @@ class GameScene(Scene):
                                      color = '#e5e5e5',
                                      parent = self,
                                      size = self.size)
+        # set up scoreboard
+        scoreboard_position = Vector2(self.center_of_screen_x, self.size_of_screen_y * (1/100))
+        scoreboard_size = Vector2(self.size_of_screen_x * (1/3), self.size_of_screen_y * (1/50))
+        scoreboard_shape = ui.Path.rect(0, 0, scoreboard_size.x, scoreboard_size.y)
+        self.scoreboard_back = ShapeNode(path = scoreboard_shape,
+                                         fill_color = '#4e4e4e',
+                                         stroke_color = '#4e4e4e',
+                                         parent = self,
+                                         position = scoreboard_position,
+                                         z_position = 12)
+        #add score label
+        self.score_label = LabelNode(text = self.score_label_text,
+                                     color = 'white',
+                                     font = ('futura', 20),
+                                     parent = self,
+                                     position = scoreboard_position,
+                                     z_position = 13)
         # set up 7 games
         self.game1 = GameOne(self, self.size_of_screen_x * (1/6), self.size_of_screen_y * (5/6))
         self.game2 = GameTwo(self, self.size_of_screen_x * (5/6), self.size_of_screen_y * (5/6))
@@ -92,15 +117,19 @@ class GameScene(Scene):
             self.game4.activate_game()
             #pass
         
-        if time.time() - self.start_time > 60 and not self.game5.get_game_active() and not self.game_over:
+        if time.time() - self.start_time > 70 and not self.game5.get_game_active() and not self.game_over:
             self.game5.activate_game()
             self.game5.create_shape(self)
             #pass
         
-        if time.time() - self.start_time > 75 and not self.game6.get_game_active() and not self.game_over:
+        if time.time() - self.start_time > 100 and not self.game6.get_game_active() and not self.game_over:
             self.game6.activate_game()
             self.game6.create_truck(self)
             #pass
+        
+        if time.time() - self.start_time > 125 and not self.game7.get_game_active() and not self.game_over:
+            #self.game7.activate_game()
+            pass
         
         # game 1
         random_game_action_chance = random.randint(0, 500)
@@ -108,9 +137,8 @@ class GameScene(Scene):
             self.game1.create_meteor(self)
             self.meteor_on_screen = True
         
-        for meteor in self.game1.get_meteors():
-            if meteor.frame.intersects(self.game1.get_power_core().frame) and not self.game_over:
-                self.end_game()
+        if self.game1.get_meteor().frame.intersects(self.game1.get_power_core().frame) and not self.game_over:
+            self.end_game()
         
         # game 2
         if self.game2.get_game_active() and self.game2.get_button_is_red() and not self.game2.get_game_paused() and not self.game_over and random_game_action_chance >= 10 and random_game_action_chance < 16:
@@ -164,6 +192,13 @@ class GameScene(Scene):
         if not self.game4.get_track().frame.contains_rect(self.game4.get_slider().frame) and self.game4.get_slider().position.x < self.size_of_screen_x * (5/6) and self.game4.get_game_active():
             self.end_game()
         
+        if self.game4.get_game_active() and not self.game_over:
+            self.game4_score_count = self.game4_score_count + 1
+        
+        if self.game4_score_count == 30:
+            self.add_to_score(20)
+            self.game4_score_count = 0
+        
         # game 5
         if self.game5.get_game_active() and not self.game_over:
             self.game5_timer_count = self.game5_timer_count + 1
@@ -182,7 +217,9 @@ class GameScene(Scene):
         
         # game 6
         if self.game6.get_truck().position.y < -90 and self.game6.get_game_active() and not self.game_over:
+            self.game6.get_truck().remove_from_parent()
             self.game6.create_truck(self)
+            self.add_to_score(1000)
         
         if self.game6.get_player_car().frame.intersects(self.game6.get_truck().frame) and not self.game_over and self.game6.get_game_active():
             self.end_game()
@@ -226,11 +263,10 @@ class GameScene(Scene):
                 self.dismiss_modal_scene()
         
         # game 1
-        for meteor in self.game1.get_meteors():
-            if meteor.frame.contains_point(touch.location) and not self.game_over:
-                meteor.remove_from_parent()
-                self.game1.get_meteors().remove(meteor)
-                self.meteor_on_screen = False
+        if self.game1.get_meteor().frame.contains_point(touch.location) and not self.game_over:
+            self.game1.get_meteor().remove_from_parent()
+            self.meteor_on_screen = False
+            self.add_to_score(50)
         
         # game 2
         self.game2.get_button().scale = 1
@@ -247,6 +283,7 @@ class GameScene(Scene):
                 self.game2.set_game_paused(True)
                 self.game2_pause_counter = True
                 self.game2_pause_count = 0
+                self.add_to_score(100)
         
         # game 3
         if not self.game_over and self.game3.get_game_active() and self.game3.get_button_one().frame.contains_point(touch.location):
@@ -257,6 +294,7 @@ class GameScene(Scene):
                     self.game3_timer_count = 0
                     self.game3.get_timer().text = '5'
                     self.game3.create_shape(self)
+                    self.add_to_score(200)
                 else:
                     self.end_game()
         if not self.game_over and self.game3.get_game_active() and self.game3.get_button_two().frame.contains_point(touch.location):
@@ -267,6 +305,7 @@ class GameScene(Scene):
                     self.game3_timer_count = 0
                     self.game3.get_timer().text = '5'
                     self.game3.create_shape(self)
+                    self.add_to_score(200)
                 else:
                     self.end_game()
         if not self.game_over and self.game3.get_game_active() and self.game3.get_button_three().frame.contains_point(touch.location):
@@ -277,6 +316,7 @@ class GameScene(Scene):
                     self.game3_timer_count = 0
                     self.game3.get_timer().text = '5'
                     self.game3.create_shape(self)
+                    self.add_to_score(200)
                 else:
                     self.end_game()
         
@@ -290,6 +330,7 @@ class GameScene(Scene):
                 self.game5.get_timer().text = '5'
                 self.game5_timer_count = 0
                 self.game5.create_shape(self)
+                self.add_to_score(500)
             else:
                 self.end_game()
         if not self.game_over and self.game5.get_game_active() and self.game5.get_square_button().frame.contains_point(touch.location):
@@ -298,6 +339,7 @@ class GameScene(Scene):
                 self.game5.get_timer().text = '5'
                 self.game5_timer_count = 0
                 self.game5.create_shape(self)
+                self.add_to_score(500)
             else:
                 self.end_game()
         
@@ -374,5 +416,44 @@ class GameScene(Scene):
                                    position = menu_button_position,
                                    z_position = 15,
                                    scale = self.menu_text_scale)
+        # add score text
+        score_text_position = Vector2(self.center_of_screen_x, self.size_of_screen_y * (0.3))
+        self.score_text = LabelNode(text = self.score_label_text,
+                                    font = ('futura', 90),
+                                    color = '#ffd12b',
+                                    parent = self,
+                                    position = score_text_position,
+                                    z_position = 14,
+                                    scale = self.scale_of_sprites)
+        # add console alert to enter a name
+        self.player_name = console.input_alert('What is your name?', 'Enter your name', '', 'This is my name', hide_cancel_button = True)
         
+        if self.player_name == '':
+            self.player_name = 'guest'
+        
+        self.player_name = str(self.player_name).upper() + ' - '
+        
+        print(self.player_name)
+        
+        # write player name to file
+        
+        score_added = False
+        
+        high_scores_list = open('./high_scores.txt', 'r+')
+        high_scores_table = json.load(high_scores_list)
+        for element in range(0, len(high_scores_table)):
+            if high_scores_table[element][1] < self.score and not score_added:
+                high_scores_table.insert(element, [self.player_name, self.score])
+                score_added = True
+        high_scores_list.seek(0)
+        json.dump(high_scores_table, high_scores_list)
+        high_scores_list.close()
+    
+    def add_to_score(self, amount_to_add):
+        #adds to the score
+        
+        self.score = self.score + amount_to_add
+        
+        self.score_label_text = 'Score: ' + str(self.score).zfill(9)
+        self.score_label.text = self.score_label_text
     
