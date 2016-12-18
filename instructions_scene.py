@@ -164,7 +164,7 @@ class InstructionsScene(Scene):
         placeholder_image_position = Vector2(self.size_of_screen_x * 0.75, self.size_of_screen_y * 0.425 - self.size_of_screen_y)
         placeholder_image_size = Vector2(self.size_of_screen_x * 0.45, self.size_of_screen_y * 0.7)
         placeholder_image_scale = 0.7 * self.scale_of_sprites
-        self.placeholder_image = SpriteNode('./assets/sprites/black_massive_multiplayer.png',
+        self.placeholder_image = SpriteNode('./assets/sprites/game1_screenshot.png',
                                             parent = self,
                                             position = placeholder_image_position,
                                             size = placeholder_image_size,
