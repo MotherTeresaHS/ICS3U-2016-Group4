@@ -30,6 +30,7 @@ class InstructionsScene(Scene):
         shared_variables.close()
         
         self.item_move_speed = 2.5
+        self.action_running = False
         
         # Game descriptions
         self.game1_description = 'This is game 1:\nIn this game an asteriod\nwill randomly appear and\nmove towards a power\ncore. Tap the asteriod\nto destroy it! If\nthe asteroid touches the\npower core you lose!'
@@ -48,7 +49,7 @@ class InstructionsScene(Scene):
                                      parent = self,
                                      size = self.size)
         # add back button
-        back_button_position = Vector2(self.size_of_screen_x * 0.1, self.size_of_screen_y * 0.85)
+        self.back_button_position = Vector2(self.size_of_screen_x * 0.1, self.size_of_screen_y * 0.85)
         back_button_shape = ui.Path.oval(0, 0, 120, 120)
         back_button_shape.line_width = 10 * self.scale_of_sprites
         self.back_button_scale = self.scale_of_sprites
@@ -56,13 +57,13 @@ class InstructionsScene(Scene):
                                      fill_color = '#e38926',
                                      stroke_color = '#c97922',
                                      parent = self,
-                                     position = back_button_position,
+                                     position = self.back_button_position,
                                      scale = self.back_button_scale)
         # add back symbol
         self.back_symbol_scale = 1.5 * self.scale_of_sprites 
         self.back_symbol = SpriteNode('./assets/sprites/white_arrow_left.png',
                                       parent = self,
-                                      position = back_button_position,
+                                      position = self.back_button_position,
                                       scale = self.back_symbol_scale)
         # add box to contain credits
         credits_box_position = Vector2(self.size_of_screen_x * 0.55, self.size_of_screen_y * 0.7)
@@ -144,7 +145,7 @@ class InstructionsScene(Scene):
                                       scale = self.game7_image_scale)
 
         # add up button
-        up_button_position = Vector2(self.center_of_screen_x, self.size_of_screen_y * 0.9 - self.size_of_screen_y)
+        self.up_button_position = Vector2(self.center_of_screen_x, self.size_of_screen_y * 0.9 - self.size_of_screen_y)
         up_button_shape = ui.Path.oval(0, 0, 120, 120)
         up_button_shape.line_width = 10 * self.scale_of_sprites
         self.up_button_scale = self.scale_of_sprites
@@ -152,13 +153,13 @@ class InstructionsScene(Scene):
                                    fill_color = '#e38926',
                                    stroke_color = '#c97922',
                                    parent = self,
-                                   position = up_button_position,
+                                   position = self.up_button_position,
                                    scale = self.up_button_scale)
         # add up symbol
         self.up_symbol_scale = 1.5 * self.scale_of_sprites 
         self.up_symbol = SpriteNode('./assets/sprites/white_arrow_up.png',
                                     parent = self,
-                                    position = up_button_position,
+                                    position = self.up_button_position,
                                     scale = self.up_symbol_scale)
         # add placeholder Image
         placeholder_image_position = Vector2(self.size_of_screen_x * 0.75, self.size_of_screen_y * 0.425 - self.size_of_screen_y)
@@ -195,7 +196,12 @@ class InstructionsScene(Scene):
     
     def update(self):
         # this method is called, hopefully, 60 times a second
-        pass
+        
+        if self.back_button.position.y == self.back_button_position.y + self.size_of_screen_y and self.action_running:
+            self.action_running = False
+        
+        if self.up_button.position.y == self.up_button_position.y and self.action_running:
+            self.action_running = False
     
     def touch_began(self, touch):
         # this method is called, when user touches the screen
@@ -251,38 +257,46 @@ class InstructionsScene(Scene):
         self.up_symbol.scale = self.up_symbol_scale
         
         #Move to instructions scene
-        if self.game1_image.frame.contains_point(touch.location):
+        if self.game1_image.frame.contains_point(touch.location) and not self.action_running:
             self.animate_help_to_info()
             self.placeholder_image.texture = self.game1_image.texture
             self.placeholder_text_label.text = self.game1_description
-        if self.game2_image.frame.contains_point(touch.location):
+            self.action_running = True
+        if self.game2_image.frame.contains_point(touch.location) and not self.action_running:
             self.animate_help_to_info()
             self.placeholder_image.texture = self.game2_image.texture
             self.placeholder_text_label.text = self.game2_description
-        if self.game3_image.frame.contains_point(touch.location):
+            self.action_running = True
+        if self.game3_image.frame.contains_point(touch.location) and not self.action_running:
             self.animate_help_to_info()
             self.placeholder_image.texture = self.game3_image.texture
             self.placeholder_text_label.text = self.game3_description
-        if self.game4_image.frame.contains_point(touch.location):
+            self.action_running = True
+        if self.game4_image.frame.contains_point(touch.location) and not self.action_running:
             self.animate_help_to_info()
             self.placeholder_image.texture = self.game4_image.texture
             self.placeholder_text_label.text = self.game4_description
-        if self.game5_image.frame.contains_point(touch.location):
+            self.action_running = True
+        if self.game5_image.frame.contains_point(touch.location) and not self.action_running:
             self.animate_help_to_info()
             self.placeholder_image.texture = self.game5_image.texture
             self.placeholder_text_label.text = self.game5_description
-        if self.game6_image.frame.contains_point(touch.location):
+            self.action_running = True
+        if self.game6_image.frame.contains_point(touch.location) and not self.action_running:
             self.animate_help_to_info()
             self.placeholder_image.texture = self.game6_image.texture
             self.placeholder_text_label.text = self.game6_description
-        if self.game7_image.frame.contains_point(touch.location):
+            self.action_running = True
+        if self.game7_image.frame.contains_point(touch.location) and not self.action_running:
             self.animate_help_to_info()
             self.placeholder_image.texture = self.game7_image.texture
             self.placeholder_text_label.text = self.game7_temporary_description
+            self.action_running = True
         
         #move back to help scene
-        if self.up_button.frame.contains_point(touch.location):
+        if self.up_button.frame.contains_point(touch.location) and not self.action_running:
             self.animate_info_to_help()
+            self.action_running = True
         
         #dismiss scene
         if self.back_button.frame.contains_point(touch.location):
