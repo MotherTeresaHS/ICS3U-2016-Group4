@@ -53,7 +53,7 @@ class MainMenuScene(Scene):
         # add game title
         game_title_position = Vector2(self.center_of_screen_x, self.size_of_screen_y * 0.8)
         game_title_scale = self.scale_of_sprites
-        self.game_title = LabelNode(text = 'Task Manager',
+        self.game_title = LabelNode(text = 'Five Second Frenzy',
                                     font = ('Futura', 80),
                                     color = '#3cb346',
                                     parent = self,
