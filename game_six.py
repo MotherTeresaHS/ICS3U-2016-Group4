@@ -21,7 +21,7 @@ class GameSix(GenericGame):
         
         # properties
         self.truck = LabelNode(text = '', color = 'clear', position = (-100, -100), z_position = 0, parent = input_parent)
-        self.truck_move_speed = 30.0
+        self.truck_move_speed = 20.0
         
         # create arrows left and right
         arrow_size = Vector2(self.size_of_screen_x * (1/9), self.size_of_screen_y * (2/9))

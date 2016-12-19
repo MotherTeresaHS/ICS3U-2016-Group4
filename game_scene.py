@@ -106,6 +106,9 @@ class GameScene(Scene):
         # keep track of which games are active
         if time.time() - self.start_time > 15 and not self.game2.get_game_active() and not self.game_over:
             self.game2.activate_game()
+            self.game2.make_button_green()
+            self.game2_count_to_five = True
+            self.game2.get_timer().text = '5'
             #pass
         
         if time.time() - self.start_time > 30 and not self.game3.get_game_active() and not self.game_over:
