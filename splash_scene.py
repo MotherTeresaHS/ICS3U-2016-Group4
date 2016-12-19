@@ -32,12 +32,13 @@ class SplashScene(Scene):
         # add MT blue background color
         background_position = Vector2(self.center_of_screen_x, self.center_of_screen_y)
         self.background = SpriteNode(position = background_position, 
-                                     color = (0.61, 0.78, 0.87), 
+                                     color = 'white', 
                                      parent = self, 
                                      size = self.size)
-        self.school_crest = SpriteNode('./assets/sprites/MT_Crest.jpg',
+        self.school_crest = SpriteNode('./assets/sprites/MT_Game_Studio.png',
                                        parent = self,
-                                       position = background_position)
+                                       position = background_position,
+                                       scale = self.scale_of_sprites * 0.5)
         
         #write size of screen for classes to use
         screen_size = [self.size_of_screen_x, self.size_of_screen_y, self.center_of_screen_x, self.center_of_screen_y, self.scale_of_sprites]
