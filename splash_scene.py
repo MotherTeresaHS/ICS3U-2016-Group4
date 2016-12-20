@@ -38,7 +38,7 @@ class SplashScene(Scene):
         self.school_crest = SpriteNode('./assets/sprites/MT_Game_Studio.png',
                                        parent = self,
                                        position = background_position,
-                                       scale = self.scale_of_sprites * 0.5)
+                                       size = self.size)
         
         #write size of screen for classes to use
         screen_size = [self.size_of_screen_x, self.size_of_screen_y, self.center_of_screen_x, self.center_of_screen_y, self.scale_of_sprites]
