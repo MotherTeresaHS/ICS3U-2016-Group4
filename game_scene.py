@@ -57,11 +57,14 @@ class GameScene(Scene):
         self.game4_slider_move_speed = 0.1
         self.game4_score_count = 0
         self.game5_timer_count = 0
+        self.game7_player_max_speed = 50
+        self.game7_velocity_increase_rate = 6.5
         self.game7_velocity_x = 0
         self.game7_velocity_y = 0
+        self.game7_score_count = 0
         
         self.score = 0
-        self.score_label_text = 'Score: 0000000'
+        self.score_label_text = 'Score: 000000000'
         
         # create a timer to keep track of how far the player has progressed
         self.start_time = time.time()
@@ -97,13 +100,14 @@ class GameScene(Scene):
         self.game5 = GameFive(self, self.size_of_screen_x * (1/6), self.size_of_screen_y * (1/6))
         self.game6 = GameSix(self, self.size_of_screen_x * (5/6), self.size_of_screen_y * (1/6))
         self.game7 = GameSeven(self, self.center_of_screen_x, self.center_of_screen_y)
-        
-        self.game1.activate_game()
     
     def update(self):
         # this method is called, hopefully, 60 times a second
         
         # keep track of which games are active
+        if time.time() - self.start_time > 0 and not self.game1.get_game_active() and not self.game_over:
+            self.game1.activate_game()
+        
         if time.time() - self.start_time > 15 and not self.game2.get_game_active() and not self.game_over:
             self.game2.activate_game()
             self.game2.make_button_green()
@@ -130,9 +134,12 @@ class GameScene(Scene):
             self.game6.create_truck(self)
             #pass
         
-        if time.time() - self.start_time > 125 and not self.game7.get_game_active() and not self.game_over:
-            #self.game7.activate_game()
-            pass
+        if time.time() - self.start_time > 5 and not self.game7.get_game_active() and not self.game_over:
+            self.game7.activate_game()
+            self.game7.create_mine(self)
+            self.game7.create_mine(self)
+            self.game7.create_mine(self)
+            #pass
         
         # game 1
         random_game_action_chance = random.randint(0, 500)
@@ -222,12 +229,59 @@ class GameScene(Scene):
         if self.game6.get_truck().position.y < -90 and self.game6.get_game_active() and not self.game_over:
             self.game6.get_truck().remove_from_parent()
             self.game6.create_truck(self)
-            self.add_to_score(1000)
+            self.add_to_score(5000)
         
         if self.game6.get_player_car().frame.intersects(self.game6.get_truck().frame) and not self.game_over and self.game6.get_game_active():
             self.end_game()
         
+        # game 7
+        if gravity().x > 0.05 and self.game7.get_game_active() and not self.game_over:
+            self.game7_velocity_y = min(self.game7_velocity_y + self.game7_velocity_increase_rate * gravity().x, self.game7_player_max_speed)
         
+        if self.game7.get_player().position.y > self.size_of_screen_y * (23/24) and self.game7_velocity_y > 0:
+            self.game7_velocity_y = 0
+        
+        if gravity().x < -0.05 and self.game7.get_game_active() and not self.game_over:
+            self.game7_velocity_y = max(self.game7_velocity_y + self.game7_velocity_increase_rate * gravity().x, -self.game7_player_max_speed)
+        
+        if self.game7.get_player().position.y < self.size_of_screen_y * (1/24) and self.game7_velocity_y < 0:
+            self.game7_velocity_y = 0
+        
+        if gravity().y > 0.05 and self.game7.get_game_active() and not self.game_over:
+            self.game7_velocity_x = max(self.game7_velocity_x - self.game7_velocity_increase_rate * gravity().y, -self.game7_player_max_speed)
+        
+        if self.game7.get_player().position.x < self.size_of_screen_x * (9/24) and self.game7_velocity_x < 0:
+            self.game7_velocity_x = 0
+        
+        if gravity().y < -0.05 and self.game7.get_game_active() and not self.game_over:
+            self.game7_velocity_x = min(self.game7_velocity_x - self.game7_velocity_increase_rate * gravity().y, self.game7_player_max_speed)
+        
+        if self.game7.get_player().position.x > self.size_of_screen_x * (15/24) and self.game7_velocity_x > 0:
+            self.game7_velocity_x = 0
+        
+        if not self.game_over:
+            player_move_action = Action.move_by(self.game7_velocity_x, self.game7_velocity_y)
+            self.game7.get_player().run_action(player_move_action)
+        
+        if len(self.game7.get_mines()) >= 3:
+            self.game7.get_mines()[0].alpha = self.game7.get_mines()[0].alpha - 0.1
+            if self.game7.get_mines()[0].alpha < 0.1:
+                self.game7.get_mines()[0].remove_from_parent()
+                self.game7.get_mines().remove(self.game7.get_mines()[0])
+        
+        if random_game_action_chance > 100 and random_game_action_chance < 111 and self.game7.get_game_active() and len(self.game7.get_mines()) < 3 and not self.game_over:
+            self.game7.create_mine(self)
+        
+        for mine in self.game7.get_mines():
+            if mine.frame.intersects(self.game7.get_player().frame) and not self.game_over:
+                self.end_game()
+        
+        if self.game7.get_game_active() and not self.game_over:
+            self.game7_score_count = self.game7_score_count + 1
+        
+        if self.game7_score_count == 30:
+            self.add_to_score(1000)
+            self.game7_score_count = 0
     
     def touch_began(self, touch):
         # this method is called, when user touches the screen
@@ -269,7 +323,7 @@ class GameScene(Scene):
         if self.game1.get_meteor().frame.contains_point(touch.location) and not self.game_over:
             self.game1.get_meteor().remove_from_parent()
             self.meteor_on_screen = False
-            self.add_to_score(50)
+            self.add_to_score(100)
         
         # game 2
         self.game2.get_button().scale = 1
@@ -286,7 +340,7 @@ class GameScene(Scene):
                 self.game2.set_game_paused(True)
                 self.game2_pause_counter = True
                 self.game2_pause_count = 0
-                self.add_to_score(100)
+                self.add_to_score(150)
         
         # game 3
         if not self.game_over and self.game3.get_game_active() and self.game3.get_button_one().frame.contains_point(touch.location):

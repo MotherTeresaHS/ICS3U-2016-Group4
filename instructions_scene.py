@@ -39,8 +39,7 @@ class InstructionsScene(Scene):
         self.game4_description = "This is game 4:\nIn this game a slider moves\nslowly to the left. Keep it\nas far right as you can!\nIf the slider reaches the\nleft end of the track you lose!"
         self.game5_description = "This is game 5:\nIn the center of this game\na shape will slowly expand.\nSort it by pressing the\nmatching button on the right\nor left. If you press the\nwrong button, or five seconds\npass you lose!"
         self.game6_description = "This is game 6:\nIn this game you are\ndriving down the highway.\nTrucks will drive towards you\nfrom the other direction. avoid\nthem by touching the left or\nright button. If you hit\na truck you lose!"
-        self.game7_description = "This is game 7:\nIn this game you are the\ncircle in the middle of\nthe screen. Tilt the screen\nto move the circle. Don't\ntouch the sides of the\nbox or the red triangles\nor you lose!"
-        self.game7_temporary_description = "This is game 7:\n Coming Soon!"
+        self.game7_description = "This is game 7:\nIn this game you are the\ncircle in the middle of\nthe screen. Tilt the screen\nto move the circle. Don't\ntouch the red squares\nor you lose!"
         
         # add background color
         help_background_position = Vector2(self.center_of_screen_x, self.center_of_screen_y)
@@ -290,7 +289,7 @@ class InstructionsScene(Scene):
         if self.game7_image.frame.contains_point(touch.location) and not self.action_running:
             self.animate_help_to_info()
             self.placeholder_image.texture = self.game7_image.texture
-            self.placeholder_text_label.text = self.game7_temporary_description
+            self.placeholder_text_label.text = self.game7_description
             self.action_running = True
         
         #move back to help scene
