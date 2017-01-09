@@ -109,8 +109,8 @@ class HighScoresScene(Scene):
     
     def read_high_scores(self):
         # this method reads the high scores file to determine previous high scores
-        high_scores_list = open('./high_scores.txt')
-        high_scores_table = json.load(high_scores_list)
+        high_scores_file = open('./high_scores.txt')
+        high_scores_table = json.load(high_scores_file)
         self.high_scores_text.text = ''
         self.max_elements_reached = False
         self.number_of_elemts = 0
@@ -120,4 +120,4 @@ class HighScoresScene(Scene):
                 self.number_of_elemts = self.number_of_elemts + 1
         if self.number_of_elemts == 0:
             self.high_scores_text.text = 'No high scores yet!\nPress play to set your own now!'
-        high_scores_list.close()
+        high_scores_file.close()

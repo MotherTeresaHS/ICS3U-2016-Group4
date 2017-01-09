@@ -48,20 +48,18 @@ class GameScene(Scene):
         # properties
         self.game_over = False
         self.meteor_on_screen = False
-        self.game2_count_to_five = False
-        self.game2_count = 0
-        self.game2_pause_counter = False
-        self.game2_pause_count = 0
-        self.game3_timer_count = 0
+        self.game2_timer_time = 0
+        self.game2_pause_time = 0
+        self.game3_timer_time = 0
         self.game4_slider_touched = False
         self.game4_slider_move_speed = 0.1
-        self.game4_score_count = 0
-        self.game5_timer_count = 0
+        self.game4_score_time = 0
+        self.game5_timer_time = 0
         self.game7_player_max_speed = 50
         self.game7_velocity_increase_rate = 6.5
         self.game7_velocity_x = 0
         self.game7_velocity_y = 0
-        self.game7_score_count = 0
+        self.game7_score_time = 0
         
         self.score = 0
         self.score_label_text = 'Score: 000000000'
@@ -107,17 +105,19 @@ class GameScene(Scene):
         # keep track of which games are active
         if time.time() - self.start_time > 0 and not self.game1.get_game_active() and not self.game_over:
             self.game1.activate_game()
+            #pass
         
         if time.time() - self.start_time > 15 and not self.game2.get_game_active() and not self.game_over:
             self.game2.activate_game()
             self.game2.make_button_green()
-            self.game2_count_to_five = True
+            self.game2_timer_time = time.time()
             self.game2.get_timer().text = '5'
             #pass
         
         if time.time() - self.start_time > 30 and not self.game3.get_game_active() and not self.game_over:
             self.game3.activate_game()
             self.game3.create_shape(self)
+            self.game3_timer_time = time.time()
             #pass
         
         if time.time() - self.start_time > 45 and not self.game4.get_game_active() and not self.game_over:
@@ -127,6 +127,7 @@ class GameScene(Scene):
         if time.time() - self.start_time > 70 and not self.game5.get_game_active() and not self.game_over:
             self.game5.activate_game()
             self.game5.create_shape(self)
+            self.game5_timer_time = time.time()
             #pass
         
         if time.time() - self.start_time > 100 and not self.game6.get_game_active() and not self.game_over:
@@ -139,6 +140,7 @@ class GameScene(Scene):
             self.game7.create_mine(self)
             self.game7.create_mine(self)
             self.game7.create_mine(self)
+            self.game7_score_time = time.time()
             #pass
         
         # game 1
@@ -153,44 +155,35 @@ class GameScene(Scene):
         # game 2
         if self.game2.get_game_active() and self.game2.get_button_is_red() and not self.game2.get_game_paused() and not self.game_over and random_game_action_chance >= 10 and random_game_action_chance < 16:
             self.game2.make_button_green()
-            self.game2_count_to_five = True
             self.game2.get_timer().text = '5'
+            self.game2_timer_time = time.time()
         
-        if self.game2_count_to_five and not self.game_over:
-            self.game2_count = self.game2_count + 1
-        
-        if self.game2_count == 30 and not self.game_over:
+        if time.time() - self.game2_timer_time > 1 and self.game2.get_timer().text == '5' and not self.game_over:
             self.game2.get_timer().text = '4'
-        if self.game2_count == 60 and not self.game_over:
+        if time.time() - self.game2_timer_time > 2 and self.game2.get_timer().text == '4' and not self.game_over:
             self.game2.get_timer().text = '3'
-        if self.game2_count == 90 and not self.game_over:
+        if time.time() - self.game2_timer_time > 3 and self.game2.get_timer().text == '3' and not self.game_over:
             self.game2.get_timer().text = '2'
-        if self.game2_count == 120 and not self.game_over:
+        if time.time() - self.game2_timer_time > 4 and self.game2.get_timer().text == '2' and not self.game_over:
             self.game2.get_timer().text = '1'
-        if self.game2_count == 150 and not self.game_over:
-            self.game2_count_to_five = False
+        if time.time() - self.game2_timer_time > 5 and self.game2.get_timer().text == '1' and not self.game_over:
             self.game2.get_timer().text = '0'
             self.end_game()
         
-        if self.game2_pause_counter:
-            self.game2_pause_count = self.game2_pause_count + 1
-            if self.game2_pause_count == 60:
-                self.game2_pause_counter = False
+        if self.game2.get_game_paused():
+            if time.time() - self.game2_pause_time > 2:
                 self.game2.set_game_paused(False)
         
         # game 3
-        if self.game3.get_game_active() and not self.game_over:
-            self.game3_timer_count = self.game3_timer_count + 1
-        
-        if not self.game_over and self.game3_timer_count == 30:
+        if time.time() - self.game3_timer_time > 1 and self.game3.get_timer().text == '5' and self.game3.get_game_active() and not self.game_over:
             self.game3.get_timer().text = '4'
-        if not self.game_over and self.game3_timer_count == 60:
+        if time.time() - self.game3_timer_time > 2 and self.game3.get_timer().text == '4' and self.game3.get_game_active() and not self.game_over:
             self.game3.get_timer().text = '3'
-        if not self.game_over and self.game3_timer_count == 90:
+        if time.time() - self.game3_timer_time > 3 and self.game3.get_timer().text == '3' and self.game3.get_game_active() and not self.game_over:
             self.game3.get_timer().text = '2'
-        if not self.game_over and self.game3_timer_count == 120:
+        if time.time() - self.game3_timer_time > 4 and self.game3.get_timer().text == '2' and self.game3.get_game_active() and not self.game_over:
             self.game3.get_timer().text = '1'
-        if not self.game_over and self.game3_timer_count == 150:
+        if time.time() - self.game3_timer_time > 5 and self.game3.get_timer().text == '1' and self.game3.get_game_active() and not self.game_over:
             self.game3.get_timer().text = '0'
             self.end_game()
         
@@ -202,26 +195,20 @@ class GameScene(Scene):
         if not self.game4.get_track().frame.contains_rect(self.game4.get_slider().frame) and self.game4.get_slider().position.x < self.size_of_screen_x * (5/6) and self.game4.get_game_active():
             self.end_game()
         
-        if self.game4.get_game_active() and not self.game_over:
-            self.game4_score_count = self.game4_score_count + 1
-        
-        if self.game4_score_count == 30:
+        if time.time() - self.game4_score_time > 1 and self.game4.get_game_active():
             self.add_to_score(20)
-            self.game4_score_count = 0
+            self.game4_score_time = time.time()
         
         # game 5
-        if self.game5.get_game_active() and not self.game_over:
-            self.game5_timer_count = self.game5_timer_count + 1
-        
-        if not self.game_over and self.game5_timer_count == 30:
+        if time.time() - self.game5_timer_time > 1 and self.game5.get_timer().text == '5' and self.game5.get_game_active() and not self.game_over:
             self.game5.get_timer().text = '4'
-        if not self.game_over and self.game5_timer_count == 60:
+        if time.time() - self.game5_timer_time > 2 and self.game5.get_timer().text == '4' and self.game5.get_game_active() and not self.game_over:
             self.game5.get_timer().text = '3'
-        if not self.game_over and self.game5_timer_count == 90:
+        if time.time() - self.game5_timer_time > 3 and self.game5.get_timer().text == '3' and self.game5.get_game_active() and not self.game_over:
             self.game5.get_timer().text = '2'
-        if not self.game_over and self.game5_timer_count == 120:
+        if time.time() - self.game5_timer_time > 4 and self.game5.get_timer().text == '2' and self.game5.get_game_active() and not self.game_over:
             self.game5.get_timer().text = '1'
-        if not self.game_over and self.game5_timer_count == 150:
+        if time.time() - self.game5_timer_time > 5 and self.game5.get_timer().text == '1' and self.game5.get_game_active() and not self.game_over:
             self.game5.get_timer().text = '0'
             self.end_game()
         
@@ -229,7 +216,7 @@ class GameScene(Scene):
         if self.game6.get_truck().position.y < -90 and self.game6.get_game_active() and not self.game_over:
             self.game6.get_truck().remove_from_parent()
             self.game6.create_truck(self)
-            self.add_to_score(5000)
+            self.add_to_score(50000)
         
         if self.game6.get_player_car().frame.intersects(self.game6.get_truck().frame) and not self.game_over and self.game6.get_game_active():
             self.end_game()
@@ -276,12 +263,9 @@ class GameScene(Scene):
             if mine.frame.intersects(self.game7.get_player().frame) and not self.game_over:
                 self.end_game()
         
-        if self.game7.get_game_active() and not self.game_over:
-            self.game7_score_count = self.game7_score_count + 1
-        
-        if self.game7_score_count == 30:
+        if time.time() - self.game7_score_time > 1 and self.game7.get_game_active():
             self.add_to_score(1000)
-            self.game7_score_count = 0
+            self.game7_score_time = time.time()
     
     def touch_began(self, touch):
         # this method is called, when user touches the screen
@@ -305,8 +289,6 @@ class GameScene(Scene):
         # game 4
         if self.game4.get_track().frame.contains_point(touch.location) and self.game4_slider_touched:
             self.game4.get_slider().position = Vector2(touch.location.x, self.game4.get_slider_y())
-        
-        
     
     def touch_ended(self, touch):
         # this method is called, when user releases a finger from the screen
@@ -334,12 +316,9 @@ class GameScene(Scene):
                 self.end_game()
             elif not self.game2.get_button_is_red():
                 self.game2.make_button_red()
-                self.game2_count_to_five = False
-                self.game2_count = 0
                 self.game2.get_timer().text = ''
                 self.game2.set_game_paused(True)
-                self.game2_pause_counter = True
-                self.game2_pause_count = 0
+                self.game2_pause_time = time.time()
                 self.add_to_score(150)
         
         # game 3
@@ -348,7 +327,7 @@ class GameScene(Scene):
                 if self.game3.get_shape_type() == 1:
                     shape.remove_from_parent()
                     self.game3.get_incoming_shape().remove(shape)
-                    self.game3_timer_count = 0
+                    self.game3_timer_time = time.time()
                     self.game3.get_timer().text = '5'
                     self.game3.create_shape(self)
                     self.add_to_score(200)
@@ -359,7 +338,7 @@ class GameScene(Scene):
                 if self.game3.get_shape_type() == 2:
                     shape.remove_from_parent()
                     self.game3.get_incoming_shape().remove(shape)
-                    self.game3_timer_count = 0
+                    self.game3_timer_time = time.time()
                     self.game3.get_timer().text = '5'
                     self.game3.create_shape(self)
                     self.add_to_score(200)
@@ -370,7 +349,7 @@ class GameScene(Scene):
                 if self.game3.get_shape_type() == 3:
                     shape.remove_from_parent()
                     self.game3.get_incoming_shape().remove(shape)
-                    self.game3_timer_count = 0
+                    self.game3_timer_time = time.time()
                     self.game3.get_timer().text = '5'
                     self.game3.create_shape(self)
                     self.add_to_score(200)
@@ -385,7 +364,7 @@ class GameScene(Scene):
             if self.game5.get_shape_type() == 1:
                 self.game5.get_incoming_shape().remove_from_parent()
                 self.game5.get_timer().text = '5'
-                self.game5_timer_count = 0
+                self.game5_timer_time = time.time()
                 self.game5.create_shape(self)
                 self.add_to_score(500)
             else:
@@ -394,7 +373,7 @@ class GameScene(Scene):
             if self.game5.get_shape_type() == 2:
                 self.game5.get_incoming_shape().remove_from_parent()
                 self.game5.get_timer().text = '5'
-                self.game5_timer_count = 0
+                self.game5_timer_time = time.time()
                 self.game5.create_shape(self)
                 self.add_to_score(500)
             else:
@@ -408,9 +387,6 @@ class GameScene(Scene):
         if not self.game_over and self.game6.get_game_active() and self.game6.get_right_arrow().frame.contains_point(touch.location):
             player_car_move_action = Action.move_to(self.size_of_screen_x * (21/24), self.game6.get_player_car().position.y, 1.0, TIMING_SINODIAL)
             self.game6.get_player_car().run_action(player_car_move_action)
-        
-        
-        
     
     def did_change_size(self):
         # this method is called, when user changes the orientation of the screen
@@ -494,17 +470,17 @@ class GameScene(Scene):
         
         score_added = False
         
-        high_scores_list = open('./high_scores.txt', 'r+')
-        high_scores_table = json.load(high_scores_list)
+        high_scores_file = open('./high_scores.txt', 'r+')
+        high_scores_table = json.load(high_scores_file)
         for element in range(0, len(high_scores_table)):
-            if high_scores_table[element][1] < self.score and not score_added:
+            if not score_added and high_scores_table[element][1] < self.score:
                 high_scores_table.insert(element, [self.player_name, self.score])
                 score_added = True
         if not score_added:
             high_scores_table.append([self.player_name, self.score])
-        high_scores_list.seek(0)
-        json.dump(high_scores_table, high_scores_list)
-        high_scores_list.close()
+        high_scores_file.seek(0)
+        json.dump(high_scores_table, high_scores_file)
+        high_scores_file.close()
     
     def add_to_score(self, amount_to_add):
         #adds to the score
@@ -513,4 +489,3 @@ class GameScene(Scene):
         
         self.score_label_text = 'Score: ' + str(self.score).zfill(9)
         self.score_label.text = self.score_label_text
-    
