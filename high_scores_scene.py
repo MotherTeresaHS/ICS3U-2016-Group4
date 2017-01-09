@@ -10,6 +10,7 @@
 from scene import *
 import ui
 import json
+import sound
 
 class HighScoresScene(Scene):
     def setup(self):
@@ -90,6 +91,7 @@ class HighScoresScene(Scene):
         
         # move to main menu scene
         if self.back_button.frame.contains_point(touch.location):
+            sound.play_effect('ui:rollover6')
             self.dismiss_modal_scene()
     
     def did_change_size(self):

@@ -12,6 +12,7 @@
 from scene import *
 import ui
 import json
+import sound
 
 class InstructionsScene(Scene):
     def setup(self):
@@ -261,44 +262,53 @@ class InstructionsScene(Scene):
             self.placeholder_image.texture = self.game1_image.texture
             self.placeholder_text_label.text = self.game1_description
             self.action_running = True
+            sound.play_effect('ui:rollover6')
         if self.game2_image.frame.contains_point(touch.location) and not self.action_running:
             self.animate_help_to_info()
             self.placeholder_image.texture = self.game2_image.texture
             self.placeholder_text_label.text = self.game2_description
             self.action_running = True
+            sound.play_effect('ui:rollover6')
         if self.game3_image.frame.contains_point(touch.location) and not self.action_running:
             self.animate_help_to_info()
             self.placeholder_image.texture = self.game3_image.texture
             self.placeholder_text_label.text = self.game3_description
             self.action_running = True
+            sound.play_effect('ui:rollover6')
         if self.game4_image.frame.contains_point(touch.location) and not self.action_running:
             self.animate_help_to_info()
             self.placeholder_image.texture = self.game4_image.texture
             self.placeholder_text_label.text = self.game4_description
             self.action_running = True
+            sound.play_effect('ui:rollover6')
         if self.game5_image.frame.contains_point(touch.location) and not self.action_running:
             self.animate_help_to_info()
             self.placeholder_image.texture = self.game5_image.texture
             self.placeholder_text_label.text = self.game5_description
             self.action_running = True
+            sound.play_effect('ui:rollover6')
         if self.game6_image.frame.contains_point(touch.location) and not self.action_running:
             self.animate_help_to_info()
             self.placeholder_image.texture = self.game6_image.texture
             self.placeholder_text_label.text = self.game6_description
             self.action_running = True
+            sound.play_effect('ui:rollover6')
         if self.game7_image.frame.contains_point(touch.location) and not self.action_running:
             self.animate_help_to_info()
             self.placeholder_image.texture = self.game7_image.texture
             self.placeholder_text_label.text = self.game7_description
             self.action_running = True
+            sound.play_effect('ui:rollover6')
         
         #move back to help scene
         if self.up_button.frame.contains_point(touch.location) and not self.action_running:
             self.animate_info_to_help()
             self.action_running = True
+            sound.play_effect('ui:rollover6')
         
         #dismiss scene
         if self.back_button.frame.contains_point(touch.location):
+            sound.play_effect('ui:rollover6')
             self.dismiss_modal_scene()
     
     def did_change_size(self):

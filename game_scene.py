@@ -14,6 +14,7 @@ import ui
 import time
 import console
 import json
+import sound
 from numpy import random
 from game_one import *
 from game_two import *
@@ -150,6 +151,7 @@ class GameScene(Scene):
             self.meteor_on_screen = True
         
         if self.game1.get_meteor().frame.intersects(self.game1.get_power_core().frame) and not self.game_over:
+            sound.play_effect('game:Clank')
             self.end_game()
         
         # game 2
@@ -168,6 +170,7 @@ class GameScene(Scene):
             self.game2.get_timer().text = '1'
         if time.time() - self.game2_timer_time > 5 and self.game2.get_timer().text == '1' and not self.game_over:
             self.game2.get_timer().text = '0'
+            sound.play_effect('game:Error')
             self.end_game()
         
         if self.game2.get_game_paused():
@@ -185,6 +188,7 @@ class GameScene(Scene):
             self.game3.get_timer().text = '1'
         if time.time() - self.game3_timer_time > 5 and self.game3.get_timer().text == '1' and self.game3.get_game_active() and not self.game_over:
             self.game3.get_timer().text = '0'
+            sound.play_effect('game:Error')
             self.end_game()
         
         # game 4
@@ -193,6 +197,7 @@ class GameScene(Scene):
             self.game4.get_slider().run_action(slider_move_action)
         
         if not self.game4.get_track().frame.contains_rect(self.game4.get_slider().frame) and self.game4.get_slider().position.x < self.size_of_screen_x * (5/6) and self.game4.get_game_active():
+            sound.play_effect('game:Crashing')
             self.end_game()
         
         if time.time() - self.game4_score_time > 1 and self.game4.get_game_active():
@@ -210,6 +215,7 @@ class GameScene(Scene):
             self.game5.get_timer().text = '1'
         if time.time() - self.game5_timer_time > 5 and self.game5.get_timer().text == '1' and self.game5.get_game_active() and not self.game_over:
             self.game5.get_timer().text = '0'
+            sound.play_effect('game:Error')
             self.end_game()
         
         # game 6
@@ -219,6 +225,7 @@ class GameScene(Scene):
             self.add_to_score(50000)
         
         if self.game6.get_player_car().frame.intersects(self.game6.get_truck().frame) and not self.game_over and self.game6.get_game_active():
+            sound.play_effect('game:Crashing')
             self.end_game()
         
         # game 7
@@ -261,6 +268,7 @@ class GameScene(Scene):
         
         for mine in self.game7.get_mines():
             if mine.frame.intersects(self.game7.get_player().frame) and not self.game_over:
+                sound.play_effect('game:Error')
                 self.end_game()
         
         if time.time() - self.game7_score_time > 1 and self.game7.get_game_active():
@@ -306,6 +314,7 @@ class GameScene(Scene):
             self.game1.get_meteor().remove_from_parent()
             self.meteor_on_screen = False
             self.add_to_score(100)
+            sound.play_effect('game:Click_1')
         
         # game 2
         self.game2.get_button().scale = 1
@@ -313,6 +322,7 @@ class GameScene(Scene):
         
         if not self.game_over and self.game2.get_game_active() and self.game2.get_button().frame.contains_point(touch.location):
             if self.game2.get_button_is_red():
+                sound.play_effect('game:Error')
                 self.end_game()
             elif not self.game2.get_button_is_red():
                 self.game2.make_button_red()
@@ -320,6 +330,7 @@ class GameScene(Scene):
                 self.game2.set_game_paused(True)
                 self.game2_pause_time = time.time()
                 self.add_to_score(150)
+                sound.play_effect('game:Click_1')
         
         # game 3
         if not self.game_over and self.game3.get_game_active() and self.game3.get_button_one().frame.contains_point(touch.location):
@@ -331,7 +342,9 @@ class GameScene(Scene):
                     self.game3.get_timer().text = '5'
                     self.game3.create_shape(self)
                     self.add_to_score(200)
+                    sound.play_effect('game:Click_1')
                 else:
+                    sound.play_effect('game:Error')
                     self.end_game()
         if not self.game_over and self.game3.get_game_active() and self.game3.get_button_two().frame.contains_point(touch.location):
             for shape in self.game3.get_incoming_shape():
@@ -342,7 +355,9 @@ class GameScene(Scene):
                     self.game3.get_timer().text = '5'
                     self.game3.create_shape(self)
                     self.add_to_score(200)
+                    sound.play_effect('game:Click_1')
                 else:
+                    sound.play_effect('game:Error')
                     self.end_game()
         if not self.game_over and self.game3.get_game_active() and self.game3.get_button_three().frame.contains_point(touch.location):
             for shape in self.game3.get_incoming_shape():
@@ -353,7 +368,9 @@ class GameScene(Scene):
                     self.game3.get_timer().text = '5'
                     self.game3.create_shape(self)
                     self.add_to_score(200)
+                    sound.play_effect('game:Click_1')
                 else:
+                    sound.play_effect('game:Error')
                     self.end_game()
         
         # game 4
@@ -367,7 +384,9 @@ class GameScene(Scene):
                 self.game5_timer_time = time.time()
                 self.game5.create_shape(self)
                 self.add_to_score(500)
+                sound.play_effect('game:Click_1')
             else:
+                sound.play_effect('game:Error')
                 self.end_game()
         if not self.game_over and self.game5.get_game_active() and self.game5.get_square_button().frame.contains_point(touch.location):
             if self.game5.get_shape_type() == 2:
@@ -376,17 +395,21 @@ class GameScene(Scene):
                 self.game5_timer_time = time.time()
                 self.game5.create_shape(self)
                 self.add_to_score(500)
+                sound.play_effect('game:Click_1')
             else:
+                sound.play_effect('game:Error')
                 self.end_game()
         
         # game 6
         if not self.game_over and self.game6.get_game_active() and self.game6.get_left_arrow().frame.contains_point(touch.location):
             player_car_move_action = Action.move_to(self.size_of_screen_x * (19/24), self.game6.get_player_car().position.y, 1.0, TIMING_SINODIAL)
             self.game6.get_player_car().run_action(player_car_move_action)
+            sound.play_effect('game:Click_1')
         
         if not self.game_over and self.game6.get_game_active() and self.game6.get_right_arrow().frame.contains_point(touch.location):
             player_car_move_action = Action.move_to(self.size_of_screen_x * (21/24), self.game6.get_player_car().position.y, 1.0, TIMING_SINODIAL)
             self.game6.get_player_car().run_action(player_car_move_action)
+            sound.play_effect('game:Click_1')
     
     def did_change_size(self):
         # this method is called, when user changes the orientation of the screen
