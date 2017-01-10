@@ -61,7 +61,7 @@ class HighScoresScene(Scene):
                                            scale = self.scale_of_sprites)
         # add high scores text label
         high_scores_text_position = Vector2(self.center_of_screen_x, self.center_of_screen_y * 0.8)
-        self.high_scores_text = LabelNode(text = 'blank blank blank\nblank blank blank\nblank blank blank\nblank blank blank\nblank blank blank\nblank blank blank\nblank blank blank\nblank blank blank\nblank blank blank\n',
+        self.high_scores_text = LabelNode(text = '',
                                           font = ('futura', 40),
                                           color = '#b4b4b4',
                                           parent = self,

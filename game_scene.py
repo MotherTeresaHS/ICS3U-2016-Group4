@@ -60,10 +60,13 @@ class GameScene(Scene):
         self.game7_velocity_increase_rate = 6.5
         self.game7_velocity_x = 0
         self.game7_velocity_y = 0
+        self.game7_max_mines = 0
         self.game7_score_time = 0
         
         self.score = 0
         self.score_label_text = 'Score: 000000000'
+        self.score_scale = 1
+        self.score_scale_time = time.time()
         
         # create a timer to keep track of how far the player has progressed
         self.start_time = time.time()
@@ -104,7 +107,7 @@ class GameScene(Scene):
         # this method is called, hopefully, 60 times a second
         
         # keep track of which games are active
-        if time.time() - self.start_time > 0 and not self.game1.get_game_active() and not self.game_over:
+        if time.time() - self.start_time > 5 and not self.game1.get_game_active() and not self.game_over:
             self.game1.activate_game()
             #pass
         
@@ -113,6 +116,7 @@ class GameScene(Scene):
             self.game2.make_button_green()
             self.game2_timer_time = time.time()
             self.game2.get_timer().text = '5'
+            self.game7_max_mines = 1
             #pass
         
         if time.time() - self.start_time > 30 and not self.game3.get_game_active() and not self.game_over:
@@ -123,6 +127,7 @@ class GameScene(Scene):
         
         if time.time() - self.start_time > 45 and not self.game4.get_game_active() and not self.game_over:
             self.game4.activate_game()
+            self.game7_max_mines = 2
             #pass
         
         if time.time() - self.start_time > 70 and not self.game5.get_game_active() and not self.game_over:
@@ -134,13 +139,11 @@ class GameScene(Scene):
         if time.time() - self.start_time > 100 and not self.game6.get_game_active() and not self.game_over:
             self.game6.activate_game()
             self.game6.create_truck(self)
+            self.game7_max_mines = 3
             #pass
         
-        if time.time() - self.start_time > 5 and not self.game7.get_game_active() and not self.game_over:
+        if time.time() - self.start_time > 0 and not self.game7.get_game_active() and not self.game_over:
             self.game7.activate_game()
-            self.game7.create_mine(self)
-            self.game7.create_mine(self)
-            self.game7.create_mine(self)
             self.game7_score_time = time.time()
             #pass
         
@@ -222,7 +225,7 @@ class GameScene(Scene):
         if self.game6.get_truck().position.y < -90 and self.game6.get_game_active() and not self.game_over:
             self.game6.get_truck().remove_from_parent()
             self.game6.create_truck(self)
-            self.add_to_score(50000)
+            self.add_to_score(25000)
         
         if self.game6.get_player_car().frame.intersects(self.game6.get_truck().frame) and not self.game_over and self.game6.get_game_active():
             sound.play_effect('game:Crashing')
@@ -257,13 +260,13 @@ class GameScene(Scene):
             player_move_action = Action.move_by(self.game7_velocity_x, self.game7_velocity_y)
             self.game7.get_player().run_action(player_move_action)
         
-        if len(self.game7.get_mines()) >= 3:
+        if len(self.game7.get_mines()) >= self.game7_max_mines + 1:
             self.game7.get_mines()[0].alpha = self.game7.get_mines()[0].alpha - 0.1
             if self.game7.get_mines()[0].alpha < 0.1:
                 self.game7.get_mines()[0].remove_from_parent()
                 self.game7.get_mines().remove(self.game7.get_mines()[0])
         
-        if random_game_action_chance > 100 and random_game_action_chance < 111 and self.game7.get_game_active() and len(self.game7.get_mines()) < 3 and not self.game_over:
+        if random_game_action_chance > 100 and random_game_action_chance < 111 and self.game7.get_game_active() and len(self.game7.get_mines()) < self.game7_max_mines + 1 and not self.game_over:
             self.game7.create_mine(self)
         
         for mine in self.game7.get_mines():
@@ -274,6 +277,11 @@ class GameScene(Scene):
         if time.time() - self.game7_score_time > 1 and self.game7.get_game_active():
             self.add_to_score(1000)
             self.game7_score_time = time.time()
+        
+        #scale up the score with time
+        if time.time() - self.score_scale_time > 20 and not self.game_over:
+            self.score_scale = self.score_scale + 0.1
+            self.score_scale_time = time.time()
     
     def touch_began(self, touch):
         # this method is called, when user touches the screen
@@ -508,7 +516,7 @@ class GameScene(Scene):
     def add_to_score(self, amount_to_add):
         #adds to the score
         
-        self.score = self.score + amount_to_add
+        self.score = int(self.score + (amount_to_add * self.score_scale))
         
         self.score_label_text = 'Score: ' + str(self.score).zfill(9)
         self.score_label.text = self.score_label_text
