@@ -91,7 +91,7 @@ class HighScoresScene(Scene):
         
         # move to main menu scene
         if self.back_button.frame.contains_point(touch.location):
-            sound.play_effect('ui:rollover6')
+            sound.play_effect('./assets/sounds/rollover6.caf')
             self.dismiss_modal_scene()
     
     def did_change_size(self):

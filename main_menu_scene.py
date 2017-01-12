@@ -130,15 +130,15 @@ class MainMenuScene(Scene):
         
         # switch scenes when buttons pressed
         if self.help_button.frame.contains_point(touch.location):
-            sound.play_effect('ui:rollover6')
+            sound.play_effect('./assets/sounds/rollover6.caf')
             self.present_modal_scene(InstructionsScene())
         
         if self.high_scores_button.frame.contains_point(touch.location):
-            sound.play_effect('ui:rollover6')
+            sound.play_effect('./assets/sounds/rollover6.caf')
             self.present_modal_scene(HighScoresScene())
         
         if self.play_button.frame.contains_point(touch.location):
-            sound.play_effect('ui:rollover6')
+            sound.play_effect('./assets/sounds/rollover6.caf')
             self.present_modal_scene(GameScene())
         
     
