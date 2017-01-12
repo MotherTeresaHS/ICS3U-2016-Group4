@@ -10,6 +10,7 @@
 from scene import *
 import ui
 import json
+import sound
 
 class HighScoresScene(Scene):
     def setup(self):
@@ -60,7 +61,7 @@ class HighScoresScene(Scene):
                                            scale = self.scale_of_sprites)
         # add high scores text label
         high_scores_text_position = Vector2(self.center_of_screen_x, self.center_of_screen_y * 0.8)
-        self.high_scores_text = LabelNode(text = 'blank blank blank\nblank blank blank\nblank blank blank\nblank blank blank\nblank blank blank\nblank blank blank\nblank blank blank\nblank blank blank\nblank blank blank\n',
+        self.high_scores_text = LabelNode(text = '',
                                           font = ('futura', 40),
                                           color = '#b4b4b4',
                                           parent = self,
@@ -90,6 +91,7 @@ class HighScoresScene(Scene):
         
         # move to main menu scene
         if self.back_button.frame.contains_point(touch.location):
+            sound.play_effect('ui:rollover6')
             self.dismiss_modal_scene()
     
     def did_change_size(self):
@@ -109,8 +111,8 @@ class HighScoresScene(Scene):
     
     def read_high_scores(self):
         # this method reads the high scores file to determine previous high scores
-        high_scores_list = open('./high_scores.txt')
-        high_scores_table = json.load(high_scores_list)
+        high_scores_file = open('./high_scores.txt')
+        high_scores_table = json.load(high_scores_file)
         self.high_scores_text.text = ''
         self.max_elements_reached = False
         self.number_of_elemts = 0
@@ -120,4 +122,4 @@ class HighScoresScene(Scene):
                 self.number_of_elemts = self.number_of_elemts + 1
         if self.number_of_elemts == 0:
             self.high_scores_text.text = 'No high scores yet!\nPress play to set your own now!'
-        high_scores_list.close()
+        high_scores_file.close()

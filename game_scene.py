@@ -14,6 +14,7 @@ import ui
 import time
 import console
 import json
+import sound
 from numpy import random
 from game_one import *
 from game_two import *
@@ -48,20 +49,24 @@ class GameScene(Scene):
         # properties
         self.game_over = False
         self.meteor_on_screen = False
-        self.game2_count_to_five = False
-        self.game2_count = 0
-        self.game2_pause_counter = False
-        self.game2_pause_count = 0
-        self.game3_timer_count = 0
+        self.game2_timer_time = 0
+        self.game2_pause_time = 0
+        self.game3_timer_time = 0
         self.game4_slider_touched = False
         self.game4_slider_move_speed = 0.1
-        self.game4_score_count = 0
-        self.game5_timer_count = 0
+        self.game4_score_time = 0
+        self.game5_timer_time = 0
+        self.game7_player_max_speed = 50
+        self.game7_velocity_increase_rate = 6.5
         self.game7_velocity_x = 0
         self.game7_velocity_y = 0
+        self.game7_max_mines = 0
+        self.game7_score_time = 0
         
         self.score = 0
-        self.score_label_text = 'Score: 0000000'
+        self.score_label_text = 'Score: 000000000'
+        self.score_scale = 1
+        self.score_scale_time = time.time()
         
         # create a timer to keep track of how far the player has progressed
         self.start_time = time.time()
@@ -97,42 +102,50 @@ class GameScene(Scene):
         self.game5 = GameFive(self, self.size_of_screen_x * (1/6), self.size_of_screen_y * (1/6))
         self.game6 = GameSix(self, self.size_of_screen_x * (5/6), self.size_of_screen_y * (1/6))
         self.game7 = GameSeven(self, self.center_of_screen_x, self.center_of_screen_y)
-        
-        self.game1.activate_game()
     
     def update(self):
         # this method is called, hopefully, 60 times a second
         
         # keep track of which games are active
+        if time.time() - self.start_time > 5 and not self.game1.get_game_active() and not self.game_over:
+            self.game1.activate_game()
+            #pass
+        
         if time.time() - self.start_time > 15 and not self.game2.get_game_active() and not self.game_over:
             self.game2.activate_game()
             self.game2.make_button_green()
-            self.game2_count_to_five = True
+            self.game2_timer_time = time.time()
             self.game2.get_timer().text = '5'
+            self.game7_max_mines = 1
             #pass
         
         if time.time() - self.start_time > 30 and not self.game3.get_game_active() and not self.game_over:
             self.game3.activate_game()
             self.game3.create_shape(self)
+            self.game3_timer_time = time.time()
             #pass
         
         if time.time() - self.start_time > 45 and not self.game4.get_game_active() and not self.game_over:
             self.game4.activate_game()
+            self.game7_max_mines = 2
             #pass
         
         if time.time() - self.start_time > 70 and not self.game5.get_game_active() and not self.game_over:
             self.game5.activate_game()
             self.game5.create_shape(self)
+            self.game5_timer_time = time.time()
             #pass
         
         if time.time() - self.start_time > 100 and not self.game6.get_game_active() and not self.game_over:
             self.game6.activate_game()
             self.game6.create_truck(self)
+            self.game7_max_mines = 3
             #pass
         
-        if time.time() - self.start_time > 125 and not self.game7.get_game_active() and not self.game_over:
-            #self.game7.activate_game()
-            pass
+        if time.time() - self.start_time > 0 and not self.game7.get_game_active() and not self.game_over:
+            self.game7.activate_game()
+            self.game7_score_time = time.time()
+            #pass
         
         # game 1
         random_game_action_chance = random.randint(0, 500)
@@ -141,50 +154,44 @@ class GameScene(Scene):
             self.meteor_on_screen = True
         
         if self.game1.get_meteor().frame.intersects(self.game1.get_power_core().frame) and not self.game_over:
+            sound.play_effect('game:Clank')
             self.end_game()
         
         # game 2
         if self.game2.get_game_active() and self.game2.get_button_is_red() and not self.game2.get_game_paused() and not self.game_over and random_game_action_chance >= 10 and random_game_action_chance < 16:
             self.game2.make_button_green()
-            self.game2_count_to_five = True
             self.game2.get_timer().text = '5'
+            self.game2_timer_time = time.time()
         
-        if self.game2_count_to_five and not self.game_over:
-            self.game2_count = self.game2_count + 1
-        
-        if self.game2_count == 30 and not self.game_over:
+        if time.time() - self.game2_timer_time > 1 and self.game2.get_timer().text == '5' and not self.game_over:
             self.game2.get_timer().text = '4'
-        if self.game2_count == 60 and not self.game_over:
+        if time.time() - self.game2_timer_time > 2 and self.game2.get_timer().text == '4' and not self.game_over:
             self.game2.get_timer().text = '3'
-        if self.game2_count == 90 and not self.game_over:
+        if time.time() - self.game2_timer_time > 3 and self.game2.get_timer().text == '3' and not self.game_over:
             self.game2.get_timer().text = '2'
-        if self.game2_count == 120 and not self.game_over:
+        if time.time() - self.game2_timer_time > 4 and self.game2.get_timer().text == '2' and not self.game_over:
             self.game2.get_timer().text = '1'
-        if self.game2_count == 150 and not self.game_over:
-            self.game2_count_to_five = False
+        if time.time() - self.game2_timer_time > 5 and self.game2.get_timer().text == '1' and not self.game_over:
             self.game2.get_timer().text = '0'
+            sound.play_effect('game:Error')
             self.end_game()
         
-        if self.game2_pause_counter:
-            self.game2_pause_count = self.game2_pause_count + 1
-            if self.game2_pause_count == 60:
-                self.game2_pause_counter = False
+        if self.game2.get_game_paused():
+            if time.time() - self.game2_pause_time > 2:
                 self.game2.set_game_paused(False)
         
         # game 3
-        if self.game3.get_game_active() and not self.game_over:
-            self.game3_timer_count = self.game3_timer_count + 1
-        
-        if not self.game_over and self.game3_timer_count == 30:
+        if time.time() - self.game3_timer_time > 1 and self.game3.get_timer().text == '5' and self.game3.get_game_active() and not self.game_over:
             self.game3.get_timer().text = '4'
-        if not self.game_over and self.game3_timer_count == 60:
+        if time.time() - self.game3_timer_time > 2 and self.game3.get_timer().text == '4' and self.game3.get_game_active() and not self.game_over:
             self.game3.get_timer().text = '3'
-        if not self.game_over and self.game3_timer_count == 90:
+        if time.time() - self.game3_timer_time > 3 and self.game3.get_timer().text == '3' and self.game3.get_game_active() and not self.game_over:
             self.game3.get_timer().text = '2'
-        if not self.game_over and self.game3_timer_count == 120:
+        if time.time() - self.game3_timer_time > 4 and self.game3.get_timer().text == '2' and self.game3.get_game_active() and not self.game_over:
             self.game3.get_timer().text = '1'
-        if not self.game_over and self.game3_timer_count == 150:
+        if time.time() - self.game3_timer_time > 5 and self.game3.get_timer().text == '1' and self.game3.get_game_active() and not self.game_over:
             self.game3.get_timer().text = '0'
+            sound.play_effect('game:Error')
             self.end_game()
         
         # game 4
@@ -193,41 +200,88 @@ class GameScene(Scene):
             self.game4.get_slider().run_action(slider_move_action)
         
         if not self.game4.get_track().frame.contains_rect(self.game4.get_slider().frame) and self.game4.get_slider().position.x < self.size_of_screen_x * (5/6) and self.game4.get_game_active():
+            sound.play_effect('game:Crashing')
             self.end_game()
         
-        if self.game4.get_game_active() and not self.game_over:
-            self.game4_score_count = self.game4_score_count + 1
-        
-        if self.game4_score_count == 30:
+        if time.time() - self.game4_score_time > 1 and self.game4.get_game_active():
             self.add_to_score(20)
-            self.game4_score_count = 0
+            self.game4_score_time = time.time()
         
         # game 5
-        if self.game5.get_game_active() and not self.game_over:
-            self.game5_timer_count = self.game5_timer_count + 1
-        
-        if not self.game_over and self.game5_timer_count == 30:
+        if time.time() - self.game5_timer_time > 1 and self.game5.get_timer().text == '5' and self.game5.get_game_active() and not self.game_over:
             self.game5.get_timer().text = '4'
-        if not self.game_over and self.game5_timer_count == 60:
+        if time.time() - self.game5_timer_time > 2 and self.game5.get_timer().text == '4' and self.game5.get_game_active() and not self.game_over:
             self.game5.get_timer().text = '3'
-        if not self.game_over and self.game5_timer_count == 90:
+        if time.time() - self.game5_timer_time > 3 and self.game5.get_timer().text == '3' and self.game5.get_game_active() and not self.game_over:
             self.game5.get_timer().text = '2'
-        if not self.game_over and self.game5_timer_count == 120:
+        if time.time() - self.game5_timer_time > 4 and self.game5.get_timer().text == '2' and self.game5.get_game_active() and not self.game_over:
             self.game5.get_timer().text = '1'
-        if not self.game_over and self.game5_timer_count == 150:
+        if time.time() - self.game5_timer_time > 5 and self.game5.get_timer().text == '1' and self.game5.get_game_active() and not self.game_over:
             self.game5.get_timer().text = '0'
+            sound.play_effect('game:Error')
             self.end_game()
         
         # game 6
         if self.game6.get_truck().position.y < -90 and self.game6.get_game_active() and not self.game_over:
             self.game6.get_truck().remove_from_parent()
             self.game6.create_truck(self)
-            self.add_to_score(1000)
+            self.add_to_score(25000)
         
         if self.game6.get_player_car().frame.intersects(self.game6.get_truck().frame) and not self.game_over and self.game6.get_game_active():
+            sound.play_effect('game:Crashing')
             self.end_game()
         
+        # game 7
+        if gravity().x > 0.05 and self.game7.get_game_active() and not self.game_over:
+            self.game7_velocity_y = min(self.game7_velocity_y + self.game7_velocity_increase_rate * gravity().x, self.game7_player_max_speed)
         
+        if self.game7.get_player().position.y > self.size_of_screen_y * (23/24) and self.game7_velocity_y > 0:
+            self.game7_velocity_y = 0
+        
+        if gravity().x < -0.05 and self.game7.get_game_active() and not self.game_over:
+            self.game7_velocity_y = max(self.game7_velocity_y + self.game7_velocity_increase_rate * gravity().x, -self.game7_player_max_speed)
+        
+        if self.game7.get_player().position.y < self.size_of_screen_y * (1/24) and self.game7_velocity_y < 0:
+            self.game7_velocity_y = 0
+        
+        if gravity().y > 0.05 and self.game7.get_game_active() and not self.game_over:
+            self.game7_velocity_x = max(self.game7_velocity_x - self.game7_velocity_increase_rate * gravity().y, -self.game7_player_max_speed)
+        
+        if self.game7.get_player().position.x < self.size_of_screen_x * (9/24) and self.game7_velocity_x < 0:
+            self.game7_velocity_x = 0
+        
+        if gravity().y < -0.05 and self.game7.get_game_active() and not self.game_over:
+            self.game7_velocity_x = min(self.game7_velocity_x - self.game7_velocity_increase_rate * gravity().y, self.game7_player_max_speed)
+        
+        if self.game7.get_player().position.x > self.size_of_screen_x * (15/24) and self.game7_velocity_x > 0:
+            self.game7_velocity_x = 0
+        
+        if not self.game_over:
+            player_move_action = Action.move_by(self.game7_velocity_x, self.game7_velocity_y)
+            self.game7.get_player().run_action(player_move_action)
+        
+        if len(self.game7.get_mines()) >= self.game7_max_mines + 1:
+            self.game7.get_mines()[0].alpha = self.game7.get_mines()[0].alpha - 0.1
+            if self.game7.get_mines()[0].alpha < 0.1:
+                self.game7.get_mines()[0].remove_from_parent()
+                self.game7.get_mines().remove(self.game7.get_mines()[0])
+        
+        if random_game_action_chance > 100 and random_game_action_chance < 111 and self.game7.get_game_active() and len(self.game7.get_mines()) < self.game7_max_mines + 1 and not self.game_over:
+            self.game7.create_mine(self)
+        
+        for mine in self.game7.get_mines():
+            if mine.frame.intersects(self.game7.get_player().frame) and not self.game_over:
+                sound.play_effect('game:Error')
+                self.end_game()
+        
+        if time.time() - self.game7_score_time > 1 and self.game7.get_game_active():
+            self.add_to_score(1000)
+            self.game7_score_time = time.time()
+        
+        #scale up the score with time
+        if time.time() - self.score_scale_time > 20 and not self.game_over:
+            self.score_scale = self.score_scale + 0.1
+            self.score_scale_time = time.time()
     
     def touch_began(self, touch):
         # this method is called, when user touches the screen
@@ -251,8 +305,6 @@ class GameScene(Scene):
         # game 4
         if self.game4.get_track().frame.contains_point(touch.location) and self.game4_slider_touched:
             self.game4.get_slider().position = Vector2(touch.location.x, self.game4.get_slider_y())
-        
-        
     
     def touch_ended(self, touch):
         # this method is called, when user releases a finger from the screen
@@ -269,7 +321,8 @@ class GameScene(Scene):
         if self.game1.get_meteor().frame.contains_point(touch.location) and not self.game_over:
             self.game1.get_meteor().remove_from_parent()
             self.meteor_on_screen = False
-            self.add_to_score(50)
+            self.add_to_score(100)
+            sound.play_effect('game:Click_1')
         
         # game 2
         self.game2.get_button().scale = 1
@@ -277,16 +330,15 @@ class GameScene(Scene):
         
         if not self.game_over and self.game2.get_game_active() and self.game2.get_button().frame.contains_point(touch.location):
             if self.game2.get_button_is_red():
+                sound.play_effect('game:Error')
                 self.end_game()
             elif not self.game2.get_button_is_red():
                 self.game2.make_button_red()
-                self.game2_count_to_five = False
-                self.game2_count = 0
                 self.game2.get_timer().text = ''
                 self.game2.set_game_paused(True)
-                self.game2_pause_counter = True
-                self.game2_pause_count = 0
-                self.add_to_score(100)
+                self.game2_pause_time = time.time()
+                self.add_to_score(150)
+                sound.play_effect('game:Click_1')
         
         # game 3
         if not self.game_over and self.game3.get_game_active() and self.game3.get_button_one().frame.contains_point(touch.location):
@@ -294,33 +346,39 @@ class GameScene(Scene):
                 if self.game3.get_shape_type() == 1:
                     shape.remove_from_parent()
                     self.game3.get_incoming_shape().remove(shape)
-                    self.game3_timer_count = 0
+                    self.game3_timer_time = time.time()
                     self.game3.get_timer().text = '5'
                     self.game3.create_shape(self)
                     self.add_to_score(200)
+                    sound.play_effect('game:Click_1')
                 else:
+                    sound.play_effect('game:Error')
                     self.end_game()
         if not self.game_over and self.game3.get_game_active() and self.game3.get_button_two().frame.contains_point(touch.location):
             for shape in self.game3.get_incoming_shape():
                 if self.game3.get_shape_type() == 2:
                     shape.remove_from_parent()
                     self.game3.get_incoming_shape().remove(shape)
-                    self.game3_timer_count = 0
+                    self.game3_timer_time = time.time()
                     self.game3.get_timer().text = '5'
                     self.game3.create_shape(self)
                     self.add_to_score(200)
+                    sound.play_effect('game:Click_1')
                 else:
+                    sound.play_effect('game:Error')
                     self.end_game()
         if not self.game_over and self.game3.get_game_active() and self.game3.get_button_three().frame.contains_point(touch.location):
             for shape in self.game3.get_incoming_shape():
                 if self.game3.get_shape_type() == 3:
                     shape.remove_from_parent()
                     self.game3.get_incoming_shape().remove(shape)
-                    self.game3_timer_count = 0
+                    self.game3_timer_time = time.time()
                     self.game3.get_timer().text = '5'
                     self.game3.create_shape(self)
                     self.add_to_score(200)
+                    sound.play_effect('game:Click_1')
                 else:
+                    sound.play_effect('game:Error')
                     self.end_game()
         
         # game 4
@@ -331,32 +389,35 @@ class GameScene(Scene):
             if self.game5.get_shape_type() == 1:
                 self.game5.get_incoming_shape().remove_from_parent()
                 self.game5.get_timer().text = '5'
-                self.game5_timer_count = 0
+                self.game5_timer_time = time.time()
                 self.game5.create_shape(self)
                 self.add_to_score(500)
+                sound.play_effect('game:Click_1')
             else:
+                sound.play_effect('game:Error')
                 self.end_game()
         if not self.game_over and self.game5.get_game_active() and self.game5.get_square_button().frame.contains_point(touch.location):
             if self.game5.get_shape_type() == 2:
                 self.game5.get_incoming_shape().remove_from_parent()
                 self.game5.get_timer().text = '5'
-                self.game5_timer_count = 0
+                self.game5_timer_time = time.time()
                 self.game5.create_shape(self)
                 self.add_to_score(500)
+                sound.play_effect('game:Click_1')
             else:
+                sound.play_effect('game:Error')
                 self.end_game()
         
         # game 6
         if not self.game_over and self.game6.get_game_active() and self.game6.get_left_arrow().frame.contains_point(touch.location):
             player_car_move_action = Action.move_to(self.size_of_screen_x * (19/24), self.game6.get_player_car().position.y, 1.0, TIMING_SINODIAL)
             self.game6.get_player_car().run_action(player_car_move_action)
+            sound.play_effect('game:Click_1')
         
         if not self.game_over and self.game6.get_game_active() and self.game6.get_right_arrow().frame.contains_point(touch.location):
             player_car_move_action = Action.move_to(self.size_of_screen_x * (21/24), self.game6.get_player_car().position.y, 1.0, TIMING_SINODIAL)
             self.game6.get_player_car().run_action(player_car_move_action)
-        
-        
-        
+            sound.play_effect('game:Click_1')
     
     def did_change_size(self):
         # this method is called, when user changes the orientation of the screen
@@ -440,23 +501,22 @@ class GameScene(Scene):
         
         score_added = False
         
-        high_scores_list = open('./high_scores.txt', 'r+')
-        high_scores_table = json.load(high_scores_list)
+        high_scores_file = open('./high_scores.txt', 'r+')
+        high_scores_table = json.load(high_scores_file)
         for element in range(0, len(high_scores_table)):
-            if high_scores_table[element][1] < self.score and not score_added:
+            if not score_added and high_scores_table[element][1] < self.score:
                 high_scores_table.insert(element, [self.player_name, self.score])
                 score_added = True
         if not score_added:
             high_scores_table.append([self.player_name, self.score])
-        high_scores_list.seek(0)
-        json.dump(high_scores_table, high_scores_list)
-        high_scores_list.close()
+        high_scores_file.seek(0)
+        json.dump(high_scores_table, high_scores_file)
+        high_scores_file.close()
     
     def add_to_score(self, amount_to_add):
         #adds to the score
         
-        self.score = self.score + amount_to_add
+        self.score = int(self.score + (amount_to_add * self.score_scale))
         
         self.score_label_text = 'Score: ' + str(self.score).zfill(9)
         self.score_label.text = self.score_label_text
-    

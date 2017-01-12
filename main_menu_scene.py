@@ -10,6 +10,7 @@
 from scene import *
 import ui
 import json
+import sound
 from instructions_scene import *
 from high_scores_scene import *
 from game_scene import *
@@ -129,12 +130,15 @@ class MainMenuScene(Scene):
         
         # switch scenes when buttons pressed
         if self.help_button.frame.contains_point(touch.location):
+            sound.play_effect('ui:rollover6')
             self.present_modal_scene(InstructionsScene())
         
         if self.high_scores_button.frame.contains_point(touch.location):
+            sound.play_effect('ui:rollover6')
             self.present_modal_scene(HighScoresScene())
         
         if self.play_button.frame.contains_point(touch.location):
+            sound.play_effect('ui:rollover6')
             self.present_modal_scene(GameScene())
         
     
